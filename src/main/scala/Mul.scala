@@ -5,5 +5,5 @@ final case class Mul(terms: Expr*) extends Expr:
   override def equals(that: Any): Boolean = that match
     case Mul(those*) => those.toSet == terms.toSet
     case _ => false
-    
+
   override def hashCode: Int = terms.toSet.hashCode
