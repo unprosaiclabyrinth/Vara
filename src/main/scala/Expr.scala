@@ -29,10 +29,9 @@ trait Expr:
 
   def unary_- : Expr = Neg(this)
 
-  extension (e: Expr)
-    def put(bindings: (String, Expr)*): Expr =
-      given env: Env = bindings.toMap
-      e.eval
+  infix def put(bindings: (String, Expr)*): Expr =
+    given env: Env = bindings.toMap
+    this.eval
 
   private def ast(e: Expr, indent: String): String = e match
     case Add(h, t*) =>
