@@ -26,7 +26,7 @@ object Mul2:
         }{
           case Pow(b, i) => i
           case _ => Const(1D)
-        }(Add2(_, _)).toList.map(Pow.apply)
+        }(_ ++ _).toList.map(Pow.apply)
       varTerms match
         case Nil => Const(constProd)
         case _ =>
