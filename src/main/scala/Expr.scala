@@ -1,20 +1,17 @@
-import scala.language.implicitConversions
+import scala.language.{implicitConversions, postfixOps}
 
 /* Expression AST */
 trait Expr:
   type Env = Map[String, Expr]
   given emptyEnv: Env = Map.empty
 
-  /** Evaluate an expression to an expression */
+  /** Evaluate an expression partially or fully from the given environment */
   def eval(using env: Env): Expr
 
-  /** Evaluate an expression fully to a double */
-  def value(using env: Env): Double = eval match
-    case Const(v) => v
-    case other => throw new IllegalStateException(s"Unbound variables in: $other")
-
-  /** Simplify/fold constants and basic algebraic rules */
-//  def simplify: Expr
+  /** Evaluate an expression fully to a value */
+  def value(using env: Env): Either[Double, Exception] = eval match
+    case Const(v) => Left(v)
+    case other => Right(new IllegalStateException(s"Unbound variables in: $other"))
 
   // Operators (according to correct precedence and assoc)
   def |:(that: Expr): Expr = Pow(this, that)
@@ -22,9 +19,9 @@ trait Expr:
   def *|(that: Expr): Expr = Mul2(this, that)
 
   def /~(that: Expr): Expr = Div(this, that)
-  
+
   def +|(that: Expr) : Expr = Add2(this, that)
-  
+
   def -|(that: Expr): Expr = Sub(this, that)
 
   def unary_- : Expr = Neg(this)
@@ -42,6 +39,7 @@ trait Expr:
 
 object Expr:
   type Env = Map[String, Expr]
+  given emptyEnv: Env = Map.empty
 
   implicit def fromDouble(d: Double): Expr = Const(d)
 
