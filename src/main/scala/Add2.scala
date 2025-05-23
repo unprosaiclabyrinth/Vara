@@ -27,7 +27,7 @@ object Add2:
       }(_ + _).toList.map((e, k) =>
         val seq = Const(k) +: e
         seq.tail.foldLeft(seq.head)((acc, e) => acc ** e)
-      ).filterNot(_.isInstanceOf[Const])
+      ).filterNot(_.isInstanceOf[Const]) // the only Const possible is 0 so get rid
     varTerms match
       case Nil => Const(constSum)
       case _ =>
