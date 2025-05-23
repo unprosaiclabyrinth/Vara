@@ -1,2 +1,2 @@
 object Sub:
-  def apply(left: Expr, right: Expr): Expr = Add2(left, Neg(right))
+  def apply(left: Expr, right: Expr): Expr = left ++ -right
