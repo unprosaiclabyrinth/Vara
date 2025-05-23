@@ -16,12 +16,17 @@ trait Expr:
   /** Simplify/fold constants and basic algebraic rules */
 //  def simplify: Expr
 
-  // Operators
+  // Operators (according to correct precedence and assoc)
+  def ~:(that: Expr): Expr = Pow(this, that)
+
+  def **(that: Expr): Expr = Mul2(this, that)
+
+  def %%(that: Expr): Expr = Div(this, that)
+  
   def ++(that: Expr) : Expr = Add2(this, that)
-  def -(that: Expr): Expr = Sub(this, that)
-  def *(that: Expr): Expr = Mul2(this, that)
-  def /(that: Expr): Expr = Div(this, that)
-  def ^(that: Expr): Expr = Pow(this, that)
+  
+  def --(that: Expr): Expr = Sub(this, that)
+
   def unary_- : Expr = Neg(this)
 
   extension (e: Expr)
@@ -42,7 +47,8 @@ trait Expr:
 
 object Expr:
   type Env = Map[String, Expr]
-  
+
   implicit def fromDouble(d: Double): Expr = Const(d)
 
   implicit def fromInt(i: Int): Expr = Const(i.toDouble)
+    
