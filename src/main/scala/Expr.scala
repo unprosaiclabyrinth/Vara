@@ -14,7 +14,7 @@ trait Expr:
     case other => Right(new IllegalStateException(s"Unbound variables in: $other"))
 
   // Operators (according to correct precedence and assoc)
-  def |:(that: Expr): Expr = Pow(this, that)
+  def |:(that: Expr): Expr = Pow(that, this) // right associativity
 
   def **(that: Expr): Expr = Mul2(this, that)
 
