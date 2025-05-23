@@ -17,19 +17,16 @@ object Add2:
       vars.groupBy(identity).toList.map((expr, copies) =>
         copies.size match
           case 1 => expr
-          case k => Mul(Const(k.toDouble), expr)
+          case k => Const(k.toDouble) ** expr
       ).groupMapReduce {
-        case Mul(Const(k), e) => e
-        case Mul(e, Const(k)) => e
-        case e => e
+        case Mul(Const(k), e*) => e
+        case e => Seq(e)
       }{
-        case Mul(Const(k), e) => k
-        case Mul(e, Const(k)) => k
+        case Mul(Const(k), e*) => k
         case _ => 1D
       }(_ + _).toList.map((e, k) =>
-        if k == 0D then Const(0D)
-        else if k == 1D then e
-        else Mul2(Const(k), e)
+        val seq = Const(k) +: e
+        seq.tail.foldLeft(seq.head)((acc, e) => acc ** e)
       ).filterNot(_.isInstanceOf[Const])
     varTerms match
       case Nil => Const(constSum)

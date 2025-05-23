@@ -1,2 +1,2 @@
 object Neg:
-  def apply(e: Expr): Expr = Mul2(Const(-1D), e)
+  def apply(e: Expr): Expr = Const(-1D) ** e

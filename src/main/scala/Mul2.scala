@@ -26,11 +26,7 @@ object Mul2:
         }{
           case Pow(b, i) => i
           case _ => Const(1D)
-        }(Add2(_, _)).toList.map((e, v) => v match
-          case Const(0D) => Const(1D)
-          case Const(1D) => e
-          case _ => Pow(e, v)
-        ).filterNot(_.isInstanceOf[Const])
+        }(Add2(_, _)).toList.map(Pow.apply)
       varTerms match
         case Nil => Const(constProd)
         case _ =>

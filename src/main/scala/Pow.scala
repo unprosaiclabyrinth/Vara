@@ -6,9 +6,9 @@ final case class Pow(base: Expr, index: Expr) extends Expr:
     case (Const(b), Const(i)) => Const(math.pow(b, i))
     case (Pow(u, v), _) => Pow(u, Mul2(v, index))
     case _ => Pow(base, index)
-    
+
   override def eval(using env: Env): Expr = base.eval |: index.eval
-    
+
   override def equals(that: Any): Boolean = that match
     case Pow(u, v) => base == u && index == v
     case _ => false
