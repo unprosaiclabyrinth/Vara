@@ -1,3 +1,2 @@
-final case class Div(numr: Expr, denom: Expr) extends Expr:
-  override def eval(using env: Env): Expr =
-    numr.eval(using env) / denom.eval(using env)
+object Div:
+  def apply(numr: Expr, denom: Expr): Expr = Mul2(numr, Pow(denom, -1))

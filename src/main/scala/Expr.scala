@@ -1,5 +1,3 @@
-import com.sun.org.apache.xpath.internal.operations.Variable
-
 import scala.language.implicitConversions
 
 /* Expression AST */
@@ -19,9 +17,9 @@ trait Expr:
 //  def simplify: Expr
 
   // Operators
-  def ++(that: Expr) : Expr = Add(this, that)
+  def ++(that: Expr) : Expr = Add2(this, that)
   def -(that: Expr): Expr = Sub(this, that)
-  def *(that: Expr): Expr = Mul(this, that)
+  def *(that: Expr): Expr = Mul2(this, that)
   def /(that: Expr): Expr = Div(this, that)
   def ^(that: Expr): Expr = Pow(this, that)
   def unary_- : Expr = Neg(this)
@@ -31,16 +29,14 @@ trait Expr:
       given env: Env = bindings.toMap
       e.eval
 
-  private def ast(e: Expr, indent: String): String =
-    e match
-      case Add(a, b) => s"${indent}Add(\n${ast(a, indent + "  ")},\n${ast(b, indent + "  ")}\n$indent)"
-      case Sub(a, b) => s"${indent}Sub(\n${ast(a, indent + "  ")},\n${ast(b, indent + "  ")}\n$indent)"
-      case Mul(a, b) => s"${indent}Mul(\n${ast(a, indent + "  ")},\n${ast(b, indent + "  ")}\n$indent)"
-      case Div(a, b) => s"${indent}Div(\n${ast(a, indent + "  ")},\n${ast(b, indent + "  ")}\n$indent)"
-      case Pow(a, b) => s"${indent}Pow(\n${ast(a, indent + "  ")},\n${ast(b, indent + "  ")}\n$indent)"
-      case Neg(a) => s"${indent}Neg(\n${ast(a, indent + "  ")}\n$indent)"
-      case Const(v) => s"${indent}Const($v)"
-      case _ => s"$indent$e"
+  private def ast(e: Expr, indent: String): String = e match
+    case Add(h, t*) =>
+      s"${indent}Add(\n${ast(h, indent + "  ")}${t.foldLeft("")((acc, e) => acc + s",\n${ast(e, indent + "  ")}")}\n$indent)"
+    case Mul(h, t*) =>
+      s"${indent}Mul(\n${ast(h, indent + "  ")}${t.foldLeft("")((acc, e) => acc + s",\n${ast(e, indent + "  ")}")}\n$indent)"
+    case Pow(a, b) => s"${indent}Pow(\n${ast(a, indent + "  ")},\n${ast(b, indent + "  ")}\n$indent)"
+    case Const(v) => s"${indent}Const($v)"
+    case _ => s"$indent$e"
 
   override def toString: String = ast(this, "")
 

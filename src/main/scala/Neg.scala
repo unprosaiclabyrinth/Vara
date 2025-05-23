@@ -1,2 +1,2 @@
-final case class Neg(e: Expr) extends Expr:
-  override def eval(using env: Env): Expr = -e.eval(using env)
+object Neg:
+  def apply(e: Expr): Expr = Mul2(Const(-1D), e)

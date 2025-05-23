@@ -1,3 +1,9 @@
-final case class Mul(left: Expr, right: Expr) extends Expr:
+final case class Mul(terms: Expr*) extends Expr:
   override def eval(using env: Env): Expr =
-    left.eval(using env) * right.eval(using env)
+    Mul(terms.map(_.eval(using env))*)
+
+  override def equals(that: Any): Boolean = that match
+    case Mul(those*) => those.toSet == terms.toSet
+    case _ => false
+    
+  override def hashCode: Int = terms.toSet.hashCode
