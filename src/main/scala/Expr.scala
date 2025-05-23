@@ -17,21 +17,17 @@ trait Expr:
 //  def simplify: Expr
 
   // Operators (according to correct precedence and assoc)
-  def ~:(that: Expr): Expr = Pow(this, that)
+  def |:(that: Expr): Expr = Pow(this, that)
 
-  def **(that: Expr): Expr = Mul2(this, that)
+  def *|(that: Expr): Expr = Mul2(this, that)
 
-  def %%(that: Expr): Expr = Div(this, that)
+  def /~(that: Expr): Expr = Div(this, that)
   
-  def ++(that: Expr) : Expr = Add2(this, that)
+  def +|(that: Expr) : Expr = Add2(this, that)
   
-  def --(that: Expr): Expr = Sub(this, that)
+  def -|(that: Expr): Expr = Sub(this, that)
 
   def unary_- : Expr = Neg(this)
-
-  infix def put(bindings: (String, Expr)*): Expr =
-    given env: Env = bindings.toMap
-    this.eval
 
   private def ast(e: Expr, indent: String): String = e match
     case Add(h, t*) =>
@@ -50,4 +46,3 @@ object Expr:
   implicit def fromDouble(d: Double): Expr = Const(d)
 
   implicit def fromInt(i: Int): Expr = Const(i.toDouble)
-    
