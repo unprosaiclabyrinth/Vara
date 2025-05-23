@@ -1,6 +1,6 @@
 object Mul2:
   private def flattenMul(e: Expr): List[Expr] = e match
-    case Mul(first, rest*) => rest.foldLeft(List(first))((acc, e) => acc ++ flattenMul(e))
+    case Mul(first, rest*) => rest.foldLeft(flattenMul(first))((acc, e) => acc ++ flattenMul(e))
     case _ => List(e)
 
   def apply(left: Expr, right: Expr): Expr =

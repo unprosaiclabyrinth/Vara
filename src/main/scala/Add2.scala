@@ -1,6 +1,6 @@
 object Add2:
   private def flattenAdd(e: Expr): List[Expr] = e match
-    case Add(first, rest*) => rest.foldLeft(List(first))((acc, e) => acc ++ flattenAdd(e))
+    case Add(first, rest*) => rest.foldLeft(flattenAdd(first))((acc, e) => acc ++ flattenAdd(e))
     case _ => List(e)
 
   def apply(left: Expr, right: Expr): Expr =
