@@ -1,2 +1,4 @@
+import Expr.fromInt
+
 object Neg:
-  def apply(e: Expr): Expr = Const(-1D) ** e
+  def apply(e: Expr): Expr = -1 ** e

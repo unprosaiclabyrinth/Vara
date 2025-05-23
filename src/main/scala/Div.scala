@@ -1,2 +1,4 @@
+import Expr.fromInt
+
 object Div:
-  def apply(numr: Expr, denom: Expr): Expr = Mul2(numr, Pow(denom, -1))
+  def apply(numr: Expr, denom: Expr): Expr = numr ** denom |: -1
