@@ -1,5 +1,5 @@
 final case class Pow(base: VaraExpr, index: VaraExpr) extends VaraExpr:
-  override def eval(using env: Env): VaraExpr = base.eval ~: index.eval
+  override def eval(using env: VaraEnv): VaraExpr = base.eval ~: index.eval
 
   override def equals(that: Any): Boolean = that match
     case Pow(u, v) => base == u && index == v

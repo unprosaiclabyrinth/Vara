@@ -3,14 +3,14 @@ import scala.util.{Failure, Success, Try}
 
 /* Expression AST */
 trait VaraExpr:
-  type Env = Map[String, VaraExpr]
-  given emptyEnv: Env = Map.empty
+  type VaraEnv = Map[String, VaraExpr]
+  given emptyEnv: VaraEnv = Map.empty
 
   /** Evaluate an expression partially or fully from the given environment */
-  def eval(using env: Env): VaraExpr
+  def eval(using env: VaraEnv): VaraExpr
 
   /** Evaluate an expression fully to a value */
-  def value(using env: Env): Try[Double] = eval match
+  def value(using env: VaraEnv): Try[Double] = eval match
     case Const(v) => Success(v)
     case other => Failure(new IllegalStateException(s"Unbound variables in: $other"))
 
@@ -39,8 +39,8 @@ trait VaraExpr:
   override def toString: String = ast(this, "")
 
 object VaraExpr:
-  type Env = Map[String, VaraExpr]
-  given emptyEnv: Env = Map.empty
+  type VaraEnv = Map[String, VaraExpr]
+  given emptyEnv: VaraEnv = Map.empty
 
   implicit def fromDouble(d: Double): VaraExpr = Const(d)
 
@@ -49,7 +49,7 @@ object VaraExpr:
   /* put API */
   case class Put(bindings: (String, VaraExpr)*):
     infix def in(expr: VaraExpr): VaraExpr =
-      val env = summon[Env]
+      val env = summon[VaraEnv]
       expr.eval(using env ++ bindings.toMap)
 
   infix def put(bindings: (String, VaraExpr)*): Put = Put(bindings *)

@@ -1,5 +1,5 @@
 implicit class Variable(val name: String) extends VaraExpr:
-  override def eval(using env: Env): VaraExpr = env.getOrElse(name, this)
+  override def eval(using env: VaraEnv): VaraExpr = env.getOrElse(name, this)
   
   override def toString: String = s"Var($name)"
 

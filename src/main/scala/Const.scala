@@ -1,5 +1,5 @@
 final case class Const(value: Double) extends VaraExpr:
-  override def eval(using env: Env): VaraExpr = this
+  override def eval(using env: VaraEnv): VaraExpr = this
 
   override def toString: String = s"Const(${if value.isWhole then value.toInt else value})"
 

@@ -1,5 +1,5 @@
 final case class Add(terms: VaraExpr*) extends VaraExpr:
-  override def eval(using env: Env): VaraExpr =
+  override def eval(using env: VaraEnv): VaraExpr =
     terms.tail.foldLeft(terms.head.eval)((acc, e) => acc +~ e.eval)
   
   override def equals(that: Any): Boolean = that match
