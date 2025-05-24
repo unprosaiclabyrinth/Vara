@@ -1,5 +1,5 @@
 final case class Pow(base: Expr, index: Expr) extends Expr:
-  override def eval(using env: Env): Expr = base.eval |: index.eval
+  override def eval(using env: Env): Expr = base.eval ~: index.eval
 
   override def equals(that: Any): Boolean = that match
     case Pow(u, v) => base == u && index == v

@@ -1,2 +1,2 @@
 object Sub:
-  def apply(left: Expr, right: Expr): Expr = left ++ -right
+  def apply(left: Expr, right: Expr): Expr = left +~ -right

@@ -26,15 +26,15 @@ object Mul2:
         }{
           case Pow(b, i) => i
           case _ => Const(1D)
-        }(_ ++ _).toList.map(Pow.apply)
+        }(_ +~ _).toList.map(Pow.apply)
           .filterNot(_.isInstanceOf[Const]) // the only Const possible is 1 so get rid
       varTerms match
         case Nil => Const(constProd)
         case h :: Nil if h.isInstanceOf[Add] => h match
           // distribution law
           case Add(e*) =>
-            e.tail.foldLeft(Const(constProd) ** e.head)(
-              (acc, e) => acc ++ Const(constProd)**e
+            e.tail.foldLeft(Const(constProd) *~ e.head)(
+              (acc, e) => acc +~ Const(constProd)*~e
             )
         case _ =>
           if constProd == 1D then Mul(varTerms*)
