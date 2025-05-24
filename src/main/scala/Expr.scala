@@ -1,5 +1,5 @@
-import scala.annotation.compileTimeOnly
 import scala.language.{implicitConversions, postfixOps}
+import scala.util.{Failure, Success, Try}
 
 /* Expression AST */
 trait Expr:
@@ -10,9 +10,9 @@ trait Expr:
   def eval(using env: Env): Expr
 
   /** Evaluate an expression fully to a value */
-  def value(using env: Env): Either[Double, Exception] = eval match
-    case Const(v) => Left(v)
-    case other => Right(new IllegalStateException(s"Unbound variables in: $other"))
+  def value(using env: Env): Try[Double] = eval match
+    case Const(v) => Success(v)
+    case other => Failure(new IllegalStateException(s"Unbound variables in: $other"))
 
   // Operators (according to correct precedence and assoc)
   def |:(that: Expr): Expr = Pow(that, this) // right associativity
@@ -48,8 +48,8 @@ object Expr:
 
   /* put API */
   case class Put(bindings: (String, Expr)*):
-    infix def in(expr: => Expr): Expr =
+    infix def in(expr: Expr): Expr =
       val env = summon[Env]
       expr.eval(using env ++ bindings.toMap)
 
-  infix def put(bindings: => (String, Expr)*): Put = Put(bindings *)
+  infix def put(bindings: (String, Expr)*): Put = Put(bindings *)
