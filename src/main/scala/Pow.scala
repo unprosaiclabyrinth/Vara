@@ -9,9 +9,10 @@ final case class Pow(base: Expr, index: Expr) extends Expr:
 
 object Pow:
   def apply(base: Expr, index: Expr): Expr = (base, index) match
+    case (Const(0D), Const(-1D)) => throw new RuntimeException("*** Division by zero.")
+    case (Const(0D), _) => Const(0D)
     case (_, Const(0D)) | (Const(1D), _) => Const(1D)
     case (b, Const(1D)) => b
-    case (Const(0D), _) => Const(0D)
     case (Const(b), Const(i)) => Const(math.pow(b, i))
     case (Pow(u, v), _) => new Pow(u, Mul2(v, index))
     case _ => new Pow(base, index)
