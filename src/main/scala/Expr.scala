@@ -47,9 +47,9 @@ object Expr:
   implicit def fromInt(i: Int): Expr = Const(i.toDouble)
 
   /* put API */
-  case class PutBuilder(bindings: (String, Expr)*):
+  case class Put(bindings: (String, Expr)*):
     infix def in(expr: => Expr): Expr =
       val env = summon[Env]
       expr.eval(using env ++ bindings.toMap)
 
-  infix def put(bindings: => (String, Expr)*): PutBuilder = PutBuilder(bindings *)
+  infix def put(bindings: => (String, Expr)*): Put = Put(bindings *)
