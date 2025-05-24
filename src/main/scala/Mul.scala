@@ -1,5 +1,5 @@
-final case class Mul(terms: Expr*) extends Expr:
-  override def eval(using env: Env): Expr =
+final case class Mul(terms: VaraExpr*) extends VaraExpr:
+  override def eval(using env: Env): VaraExpr =
     terms.tail.foldLeft(terms.head.eval)((acc, e) => acc *~ e.eval)
   
   override def equals(that: Any): Boolean = that match

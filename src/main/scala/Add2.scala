@@ -1,10 +1,10 @@
 object Add2:
-  private def flattenAdd(e: Expr): List[Expr] = e match
+  private def flattenAdd(e: VaraExpr): List[VaraExpr] = e match
     case Add(first, rest*) => rest.foldLeft(flattenAdd(first))((acc, e) => acc ++ flattenAdd(e))
     case _ => List(e)
 
-  def apply(left: Expr, right: Expr): Expr =
-    val terms: List[Expr] = flattenAdd(left) ++ flattenAdd(right)
+  def apply(left: VaraExpr, right: VaraExpr): VaraExpr =
+    val terms: List[VaraExpr] = flattenAdd(left) ++ flattenAdd(right)
     val (consts, vars) = terms.partition {
       case Const(_) => true
       case _ => false
@@ -13,7 +13,7 @@ object Add2:
       case (acc, Const(d)) => acc + d
       case (acc, _) => acc
     }
-    val varTerms: List[Expr] =
+    val varTerms: List[VaraExpr] =
       vars.groupBy(identity).toList.map((expr, copies) =>
         copies.size match
           case 1 => expr

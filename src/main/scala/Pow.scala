@@ -1,5 +1,5 @@
-final case class Pow(base: Expr, index: Expr) extends Expr:
-  override def eval(using env: Env): Expr = base.eval ~: index.eval
+final case class Pow(base: VaraExpr, index: VaraExpr) extends VaraExpr:
+  override def eval(using env: Env): VaraExpr = base.eval ~: index.eval
 
   override def equals(that: Any): Boolean = that match
     case Pow(u, v) => base == u && index == v
@@ -8,7 +8,7 @@ final case class Pow(base: Expr, index: Expr) extends Expr:
   override def hashCode: Int = (base, index).hashCode
 
 object Pow:
-  def apply(base: Expr, index: Expr): Expr = (base, index) match
+  def apply(base: VaraExpr, index: VaraExpr): VaraExpr = (base, index) match
     case (Const(0D), Const(-1D)) => throw new RuntimeException("*** Division by zero.")
     case (Const(0D), _) => Const(0D)
     case (_, Const(0D)) | (Const(1D), _) => Const(1D)

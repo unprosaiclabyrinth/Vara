@@ -1,10 +1,10 @@
 object Mul2:
-  private def flattenMul(e: Expr): List[Expr] = e match
+  private def flattenMul(e: VaraExpr): List[VaraExpr] = e match
     case Mul(first, rest*) => rest.foldLeft(flattenMul(first))((acc, e) => acc ++ flattenMul(e))
     case _ => List(e)
 
-  def apply(left: Expr, right: Expr): Expr =
-    val terms: List[Expr] = flattenMul(left) ++ flattenMul(right)
+  def apply(left: VaraExpr, right: VaraExpr): VaraExpr =
+    val terms: List[VaraExpr] = flattenMul(left) ++ flattenMul(right)
     val (consts, vars) = terms.partition {
       case Const(_) => true
       case _ => false
@@ -15,7 +15,7 @@ object Mul2:
         case (acc, Const(v)) => acc * v
         case (acc, _) => acc
       }
-      val varTerms: List[Expr] =
+      val varTerms: List[VaraExpr] =
         vars.groupBy(identity).toList.map((expr, copies) =>
           copies.size match
             case 1 => expr
