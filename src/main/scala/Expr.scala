@@ -1,3 +1,4 @@
+import scala.annotation.compileTimeOnly
 import scala.language.{implicitConversions, postfixOps}
 
 /* Expression AST */
@@ -44,3 +45,11 @@ object Expr:
   implicit def fromDouble(d: Double): Expr = Const(d)
 
   implicit def fromInt(i: Int): Expr = Const(i.toDouble)
+
+  /* put API */
+  case class PutBuilder(bindings: (String, Expr)*):
+    infix def in(expr: => Expr): Expr =
+      val env = summon[Env]
+      expr.eval(using env ++ bindings.toMap)
+
+  infix def put(bindings: => (String, Expr)*): PutBuilder = PutBuilder(bindings *)
