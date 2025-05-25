@@ -42,6 +42,7 @@ class AddSpec extends AnyWordSpec with Matchers:
       "a" +~ "a" should equal (2*~"a")
       "a" +~ "b" +~ "a" should equal (2*~"a" +~ "b")
       5*~"a" +~ 7*~"a" should equal (12*~"a")
+      "a" +~ 2*~"a" should equal (3*~"a")
     }
     "not change terms involving exponentiation" in {
       "a"~:"A" +~ "b"~:"B" should equal ("a"~:"A" +~ "b"~:"B")
