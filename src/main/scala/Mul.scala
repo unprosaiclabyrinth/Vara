@@ -3,8 +3,16 @@ final case class Mul(terms: VaraExpr*) extends VaraExpr:
     terms.tail.foldLeft(terms.head.eval)((acc, e) => acc *~ e.eval)
 
   override def toString: String = terms.foldLeft("")((acc, e) => e match
-    case Const(v) => acc + (if v.isWhole then v.toInt.toString else "("+v.toString+")")
-    case _ => acc + s"($e)"
+    case Const(v) => acc + (
+      if v == -1D then "-"
+      else if v.isWhole then v.toInt.toString
+      else "("+v.toString+")"
+    )
+    case _ => acc + {
+      val s = e.toString
+      if s.length == 1 then s
+      else "(" + s + ")"
+    }
   )
   
   override def equals(that: Any): Boolean = that match
