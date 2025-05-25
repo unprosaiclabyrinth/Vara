@@ -64,3 +64,12 @@ class MulSpec extends AnyWordSpec with Matchers:
       0 *~ "a"~:("b"~:"c" *~ "d"~:"x") should equal (0)
     }
   }
+
+  "Multiplication of a constant with a sum" should {
+    "give the sum of the products by distribution" in {
+      2 *~ ("x" +~ "y") should equal (2*~"x" +~ 2*~"y")
+      (1 + 2 + 3) *~ ("a" +~ "b" +~ "c") should equal (6*~"a" +~ 6*~"b" +~ 6*~"c")
+      2 *~ ("x" +~ "y") +~ ("a" +~ "b") should equal (2 *~ "x" +~ 2 *~ "y" +~ "a" +~ "b")
+      2 *~ ("x" +~ "y") *~ ("a" +~ "b") should equal((2*~"x" +~ 2*~"y") *~ ("a" +~ "b"))
+    }
+  }
