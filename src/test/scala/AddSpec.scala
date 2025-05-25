@@ -43,6 +43,10 @@ class AddSpec extends AnyWordSpec with Matchers:
       "a" +~ "b" +~ "a" should equal (2*~"a" +~ "b")
       5*~"a" +~ 7*~"a" should equal (12*~"a")
     }
+    "not change terms involving exponentiation" in {
+      "a"~:"A" +~ "b"~:"B" should equal ("a"~:"A" +~ "b"~:"B")
+      "a" +~ "a"~:2 +~ "a"~:3 +~ "a"~:"b" should equal ("a" +~ "a"~:2 +~ "a"~:3 +~ "a"~:"b")
+    }
   }
 
   "Addition with 0" should {
