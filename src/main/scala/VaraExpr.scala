@@ -33,8 +33,8 @@ trait VaraExpr:
     case Mul(h, t*) =>
       s"${indent}Mul(\n${ast(h, indent + "  ")}${t.foldLeft("")((acc, e) => acc + s",\n${ast(e, indent + "  ")}")}\n$indent)"
     case Pow(a, b) => s"${indent}Pow(\n${ast(a, indent + "  ")},\n${ast(b, indent + "  ")}\n$indent)"
-    case Const(v) => s"${indent}Const($v)"
-    case _ => s"$indent${e.ast}"
+    case Const(v) => s"${indent}Const(" + e.toString + ")"
+    case _ => s"${indent}Var(" + e.toString + ")"
 
   def printAST(): Unit = println(ast(this, ""))
 
