@@ -30,12 +30,15 @@ object Mul2:
           .filterNot(_.isInstanceOf[Const]) // the only Const possible is 1 so get rid
       varTerms match
         case Nil => Const(constProd)
-        case h :: Nil if h.isInstanceOf[Add] => h match
-          // distribution law
-          case Add(e*) =>
-            e.tail.foldLeft(Const(constProd) *~ e.head)(
-              (acc, e) => acc +~ Const(constProd)*~e
-            )
+        case h :: Nil =>
+          if constProd == 1D then h
+          else if h.isInstanceOf[Add] then h match
+            // distribution law
+            case Add(e*) =>
+              e.tail.foldLeft(Const(constProd) *~ e.head)(
+                (acc, e) => acc +~ Const(constProd)*~e
+              )
+          else Mul(Const(constProd), h)
         case _ =>
           if constProd == 1D then Mul(varTerms*)
           else Mul(Const(constProd) :: varTerms*)

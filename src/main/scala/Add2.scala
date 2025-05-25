@@ -19,17 +19,21 @@ object Add2:
           case 1 => expr
           case k => Const(k.toDouble) *~ expr
       ).groupMapReduce {
-        case Mul(Const(k), e*) => e
-        case e => Seq(e)
+        case Mul(Const(k), e*) => Mul(e*)
+        case Mul(e*) => Mul(e*)
+        case e => Mul(e)
       }{
         case Mul(Const(k), e*) => k
         case _ => 1D
       }(_ + _).toList.map((e, k) =>
-        val seq = Const(k) +: e
+        val seq = Const(k) +: e.terms
         seq.tail.foldLeft(seq.head)((acc, e) => acc *~ e)
       ).filterNot(_.isInstanceOf[Const]) // the only Const possible is 0 so get rid
     varTerms match
       case Nil => Const(constSum)
+      case h :: Nil =>
+        if constSum == 0D then h
+        else Add(h, Const(constSum))
       case _ =>
         if constSum == 0D then Add(varTerms*)
         else Add(varTerms :+ Const(constSum)*)

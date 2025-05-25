@@ -3,6 +3,5 @@ import VaraExpr.*
 object Calculator:
   @main
   def compute(): Unit =
-    val expr: VaraExpr = 2 ~: 2 ~: 3
+    val expr: VaraExpr = "a"*~"b" +~ 2*~"b"*~"a"
     println(expr)
-    val e1 = put ("a" -> 1) in expr
