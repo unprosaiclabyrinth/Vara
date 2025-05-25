@@ -38,7 +38,7 @@ object Mul2:
               e.tail.foldLeft(Const(constProd) *~ e.head)(
                 (acc, e) => acc +~ Const(constProd)*~e
               )
-          else Mul(Const(constProd), h)
+          else Mul(List(Const(constProd), h)*)
         case _ =>
           if constProd == 1D then Mul(varTerms*)
           else Mul(Const(constProd) :: varTerms*)
