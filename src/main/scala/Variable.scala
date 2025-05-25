@@ -5,6 +5,7 @@ implicit class Variable(val name: String) extends VaraExpr:
 
   override def equals(that: Any): Boolean = that match
     case that: Variable => this.name == that.name
+    case that: String => this.name == that
     case _ => false
 
   override def hashCode: Int = name.hashCode
