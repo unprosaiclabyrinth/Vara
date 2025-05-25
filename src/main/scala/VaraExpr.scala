@@ -42,9 +42,9 @@ object VaraExpr:
   type VaraEnv = Map[String, VaraExpr]
   given emptyEnv: VaraEnv = Map.empty
 
-  implicit def fromDouble(d: Double): VaraExpr = Const(d)
+  implicit inline def fromDouble(d: Double): VaraExpr = Const(d)
 
-  implicit def fromInt(i: Int): VaraExpr = Const(i.toDouble)
+  implicit inline def fromInt(i: Int): VaraExpr = Const(i.toDouble)
 
   /* put API */
   case class Put(bindings: (String, VaraExpr)*):
@@ -53,3 +53,9 @@ object VaraExpr:
       expr.eval(using env ++ bindings.toMap)
 
   infix def put(bindings: (String, VaraExpr)*): Put = Put(bindings *)
+
+  infix inline def e(inline s: String): VaraExpr = s
+
+  infix inline def e(inline i: Int): VaraExpr = i
+
+  infix inline def e(inline d: Double): VaraExpr = d
