@@ -44,8 +44,8 @@ object Mul2:
           val x = l.asInstanceOf[Add]
           val y = r.asInstanceOf[Add]
           val expanded = x.terms.flatMap(el => y.terms.map(er => el *~ er)).toList
-          if constProd == 1D then Mul(expanded*)
-          else Mul(Const(constProd) :: expanded*)
+          if constProd == 1D then Add(expanded*)
+          else Add(Const(constProd) :: expanded*)
         case _ =>
           if constProd == 1D then Mul(varTerms*)
           else Mul(Const(constProd) :: varTerms*)
