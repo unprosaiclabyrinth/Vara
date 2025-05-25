@@ -34,9 +34,9 @@ trait VaraExpr:
       s"${indent}Mul(\n${ast(h, indent + "  ")}${t.foldLeft("")((acc, e) => acc + s",\n${ast(e, indent + "  ")}")}\n$indent)"
     case Pow(a, b) => s"${indent}Pow(\n${ast(a, indent + "  ")},\n${ast(b, indent + "  ")}\n$indent)"
     case Const(v) => s"${indent}Const($v)"
-    case _ => s"$indent$e"
+    case _ => s"$indent${e.ast}"
 
-  override def toString: String = ast(this, "")
+  def printAST(): Unit = println(ast(this, ""))
 
 object VaraExpr:
   type VaraEnv = Map[String, VaraExpr]
