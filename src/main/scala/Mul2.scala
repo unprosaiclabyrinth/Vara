@@ -32,13 +32,20 @@ object Mul2:
         case Nil => Const(constProd)
         case h :: Nil =>
           if constProd == 1D then h
-          else if h.isInstanceOf[Add] then h match
-            // distribution law
-            case Add(e*) =>
+          else h match
+            case add: Add =>
+              // distribution law
+              val e = add.terms
               e.tail.foldLeft(Const(constProd) *~ e.head)(
-                (acc, e) => acc +~ Const(constProd)*~e
+                (acc, e) => acc +~ Const(constProd) *~ e
               )
-          else Mul(List(Const(constProd), h)*)
+            case _ => Mul(List(Const(constProd), h) *)
+        case l :: r :: Nil if l.isInstanceOf[Add] && r.isInstanceOf[Add] =>
+          val x = l.asInstanceOf[Add]
+          val y = r.asInstanceOf[Add]
+          val expanded = x.terms.flatMap(el => y.terms.map(er => el *~ er)).toList
+          if constProd == 1D then Mul(expanded*)
+          else Mul(Const(constProd) :: expanded*)
         case _ =>
           if constProd == 1D then Mul(varTerms*)
           else Mul(Const(constProd) :: varTerms*)
