@@ -10,7 +10,7 @@ class AddSpec extends AnyWordSpec with Matchers:
       3.14 +~ 2.71 should equal (5.85)
       -5 +~ 5 should equal (0)
       -7.89 +~ 1.23 should equal (-6.66)
-      0 + 0 should be (0)
+      0 +~ 0 should be (0)
     }
     "add two variables correctly" in {
       "a" +~ "b" should equal ("a" +~ "b")
