@@ -26,7 +26,7 @@ object Mul2:
         }{
           case Pow(b, i) => i
           case _ => Const(1D)
-        }(_ +~ _).toList.map(Pow.apply)
+        }(_ +# _).toList.map(Pow.apply)
           .filterNot(_.isInstanceOf[Const]) // the only Const possible is 1 so get rid
       varTerms match
         case Nil => Const(constProd)
@@ -36,14 +36,14 @@ object Mul2:
             case add: Add =>
               // distribution law
               val e = add.terms
-              e.tail.foldLeft(Const(constProd) *~ e.head)(
-                (acc, e) => acc +~ Const(constProd) *~ e
+              e.tail.foldLeft(Const(constProd) *# e.head)(
+                (acc, e) => acc +# Const(constProd) *# e
               )
             case _ => Mul(List(Const(constProd), h) *)
         case l :: r :: Nil if l.isInstanceOf[Add] && r.isInstanceOf[Add] =>
           val x = l.asInstanceOf[Add]
           val y = r.asInstanceOf[Add]
-          val expanded = x.terms.flatMap(el => y.terms.map(er => el *~ er)).toList
+          val expanded = x.terms.flatMap(el => y.terms.map(er => el *# er)).toList
           if constProd == 1D then Add(expanded*)
           else Add(Const(constProd) :: expanded*)
         case _ =>

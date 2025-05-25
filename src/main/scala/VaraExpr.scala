@@ -15,15 +15,15 @@ trait VaraExpr:
     case other => Failure(new IllegalStateException(s"Unbound variables in: $other"))
 
   // Operators (according to correct precedence and assoc)
-  infix def ~:(that: VaraExpr): VaraExpr = Pow(that, this) // right associativity
+  infix def #:(that: VaraExpr): VaraExpr = Pow(that, this) // right associativity
 
-  infix def *~(that: VaraExpr): VaraExpr = Mul2(this, that)
+  infix def *#(that: VaraExpr): VaraExpr = Mul2(this, that)
 
-  infix def /~(that: VaraExpr): VaraExpr = Div(this, that)
+  infix def /#(that: VaraExpr): VaraExpr = Div(this, that)
 
-  infix def +~(that: VaraExpr) : VaraExpr = Add2(this, that)
+  infix def +#(that: VaraExpr) : VaraExpr = Add2(this, that)
 
-  infix def -~(that: VaraExpr): VaraExpr = Sub(this, that)
+  infix def -#(that: VaraExpr): VaraExpr = Sub(this, that)
 
   infix def unary_- : VaraExpr = Neg(this)
 

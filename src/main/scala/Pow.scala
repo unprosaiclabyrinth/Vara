@@ -1,5 +1,5 @@
 final case class Pow(base: VaraExpr, index: VaraExpr) extends VaraExpr:
-  override def eval(using env: VaraEnv): VaraExpr = base.eval ~: index.eval
+  override def eval(using env: VaraEnv): VaraExpr = base.eval #: index.eval
   
   override def toString = s"($base)^($index)"
 

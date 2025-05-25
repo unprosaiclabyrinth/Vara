@@ -17,7 +17,7 @@ object Add2:
       vars.groupBy(identity).toList.map((expr, copies) =>
         copies.size match
           case 1 => expr
-          case k => Const(k.toDouble) *~ expr
+          case k => Const(k.toDouble) *# expr
       ).groupMapReduce {
         case Mul(Const(k), e*) => Mul(e*)
         case Mul(e*) => Mul(e*)
@@ -27,7 +27,7 @@ object Add2:
         case _ => 1D
       }(_ + _).toList.map((e, k) =>
         val seq = Const(k) +: e.terms
-        seq.tail.foldLeft(seq.head)((acc, e) => acc *~ e)
+        seq.tail.foldLeft(seq.head)((acc, e) => acc *# e)
       ).filterNot(_.isInstanceOf[Const]) // the only Const possible is 0 so get rid
     varTerms match
       case Nil => Const(constSum)
