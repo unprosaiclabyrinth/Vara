@@ -26,7 +26,7 @@ class MulSpec extends AnyWordSpec with Matchers:
     "be associative" in {
       "a" *# ("b" *# "c") should equal(("a" *# "b") *# "c")
     }
-    "add constants and variables correctly" in {
+    "multiply constants and variables correctly" in {
       2 *# "a" should equal (2*#"a")
       "a" *# 2 should equal (2*#"a")
       2*#"a" should not equal "2a"
