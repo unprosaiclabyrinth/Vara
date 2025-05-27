@@ -1,3 +1,5 @@
+package org.vara
+
 import java.text.DecimalFormat
 
 final case class Mul(terms: VaraExpr*) extends VaraExpr:

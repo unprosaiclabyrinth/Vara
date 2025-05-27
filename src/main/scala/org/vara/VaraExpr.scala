@@ -1,3 +1,5 @@
+package org.vara
+
 import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Failure, Success, Try}
 

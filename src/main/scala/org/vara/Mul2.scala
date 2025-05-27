@@ -1,3 +1,5 @@
+package org.vara
+
 object Mul2:
   private def flattenMul(e: VaraExpr): List[VaraExpr] = e match
     case Mul(first, rest*) => rest.foldLeft(flattenMul(first))((acc, e) => acc ++ flattenMul(e))

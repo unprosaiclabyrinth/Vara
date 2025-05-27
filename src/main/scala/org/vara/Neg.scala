@@ -1,3 +1,5 @@
+package org.vara
+
 import VaraExpr.fromInt
 
 object Neg:

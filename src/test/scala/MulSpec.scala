@@ -1,6 +1,7 @@
-import VaraExpr.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
+import org.vara.Variable
+import org.vara.VaraExpr.*
 
 class MulSpec extends AnyWordSpec with Matchers:
   "Times" should {

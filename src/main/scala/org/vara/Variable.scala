@@ -1,3 +1,5 @@
+package org.vara
+
 implicit class Variable(val name: String) extends VaraExpr:
   override def eval(using env: VaraEnv): VaraExpr = env.getOrElse(name, this)
   
