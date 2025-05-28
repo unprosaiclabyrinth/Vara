@@ -4,7 +4,8 @@ final case class Pow(base: VaraExpr, index: VaraExpr) extends VaraExpr:
   override def eval(using env: VaraEnv): VaraExpr = base.eval #: index.eval
 
   override def toString: String = index match
-    case Const(v) if v < 0 => s"\\frac{1}{{$base}^{$v}}"
+    case Const(v) if v == -1 => s"\\frac{1}{$base}"
+    case Const(v) if v < 0 => s"\\frac{1}{{$base}^{${-v}}}"
     case Mul(Const(v), e*) if v < 0 => s"\\frac{1}{{$base}^{${Mul(Const(-v) +: e*)}}"
     case _ => s"{$base}^{$index}"
 
