@@ -1,6 +1,7 @@
 package org.vara
 
 import java.text.DecimalFormat
+import VaraExpr.e
 
 final case class Mul(terms: VaraExpr*) extends VaraExpr:
   override def eval(using env: VaraEnv): VaraExpr =
@@ -11,28 +12,30 @@ final case class Mul(terms: VaraExpr*) extends VaraExpr:
       case Pow(_, Const(v)) if v < 0 => true
       case _ => false
     } then
-      val (numr, denom) = terms.foldLeft(("", ""))((acc, e) => e match
-        case Const(v) => (acc._1 + {
-          val df = new DecimalFormat("#.####")
-          if v == -1D then "-"
-          else if v.isWhole then v.toInt.toString
-          else "(" + df.format(v) + ")"
-        }, acc._2)
-        case Pow(base, Const(v)) if v < 0 =>
-          if v == -1 then (acc._1, acc._2 + base.toString)
-          else (acc._1, acc._2 + Pow(base, Const(-v)).toString)
-        case _ => (acc._1 + e.toString, acc._2)
+      val (numr, notNumr) = terms.partition {
+        case Pow(_, Const(v)) if v < 0 => false
+        case _ => true
+      }
+      val denom = notNumr.map(d =>
+        val e = d.asInstanceOf[Pow]
+        val index = e.index.asInstanceOf[Const]
+        if index.value == -1 then e.base else Pow(e.base, Const(-index.value))
       )
-      (if numr.startsWith("-") then "-" else "") + "\\frac{" + (if numr.isEmpty then "1" else numr.stripPrefix("-")) + "}{" + denom + "}"
+      val (sn, sd) = (numr.foldLeft(e(1D))((acc, n) => acc *# n).toString,
+        denom.foldLeft(e(1D))((acc, d) => acc *# d).toString)
+      val sign =
+        if (sn.startsWith("-") && !sd.startsWith("-")) ||
+          (!sn.startsWith("-") && sd.startsWith("-")) then "-"
+        else ""
+      sign + "\\frac{" + sn.stripPrefix("-") + "}{" + sd.stripPrefix("-") + "}"
     else
       terms.foldLeft("")((acc, e) => e match
         case Const(v) => acc + {
-          val df = new DecimalFormat("#.####")
+          val df5 = new DecimalFormat("#.#%###")
           if v == -1D then "-"
           else if v.isWhole then v.toInt.toString
-          else "(" + df.format(v) + ")"
+          else "(" + df5.format(v) + ")"
         }
-        case _: Pow => acc + e.toString
         case _ => acc + {
           val s = e.toString
           if s.length == 1 then s
