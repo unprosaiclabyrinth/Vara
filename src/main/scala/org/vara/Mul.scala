@@ -36,6 +36,7 @@ final case class Mul(terms: VaraExpr*) extends VaraExpr:
           else if v.isWhole then v.toInt.toString
           else "(" + df5.format(v) + ")"
         }
+        case _: Pow => acc + e.toString
         case _ => acc + {
           val s = e.toString
           if s.length == 1 then s
