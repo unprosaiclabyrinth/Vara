@@ -7,8 +7,8 @@ final case class Pow(base: VaraExpr, index: VaraExpr) extends VaraExpr:
     val baseStr = base.toString
     val indexStr = index.toString
     if baseStr.length == 1 && indexStr.length == 1 then "(" + baseStr + "^" + indexStr + ")"
-    else if baseStr.length == 1 then "{" + baseStr + "}^{" + indexStr + "}"
-    else "{(" + baseStr + ")}^{" + indexStr + "}"
+    else if baseStr.length == 1 then "({" + baseStr + "}^{" + indexStr + "})"
+    else "({(" + baseStr + ")}^{" + indexStr + "})"
 
   override def equals(that: Any): Boolean = that match
     case Pow(u, v) => base == u && index == v
