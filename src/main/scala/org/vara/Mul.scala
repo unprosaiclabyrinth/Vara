@@ -23,7 +23,7 @@ final case class Mul(terms: VaraExpr*) extends VaraExpr:
           else (acc._1, acc._2 + Pow(base, Const(-v)).toString)
         case _ => (acc._1 + e.toString, acc._2)
       )
-      "\\frac{" + (if numr.isEmpty then "1" else numr) + "}{" + denom + "}"
+      (if numr.startsWith("-") then "-" else "") + "\\frac{" + (if numr.isEmpty then "1" else numr.stripPrefix("-")) + "}{" + denom + "}"
     else
       terms.foldLeft("")((acc, e) => e match
         case Const(v) => acc + {
