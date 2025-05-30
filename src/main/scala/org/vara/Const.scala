@@ -6,7 +6,7 @@ final case class Const(value: Double) extends VaraExpr:
   override def eval(using env: VaraEnv): VaraExpr = this
 
   override def toString: String = {
-    val df5 = new DecimalFormat("#.##5##")
+    val df5 = new DecimalFormat("#.#####")
     s"${if value.isWhole then value.toInt else df5.format(value)}"
   }
 

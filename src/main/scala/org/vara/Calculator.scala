@@ -6,4 +6,4 @@ object Calculator:
   def compute(): Unit =
     val expr: VaraExpr = (("a" +# "b") *# ("f" + "g") #: -2) /# ("b" *# "c" +# "d")
     expr.printAST()
-    println(expr)
+    println(Const(0.5))
