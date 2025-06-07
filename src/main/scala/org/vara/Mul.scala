@@ -31,7 +31,7 @@ final case class Mul(terms: VaraExpr*) extends VaraExpr:
     else
       terms.foldLeft("")((acc, e) => e match
         case Const(v) => acc + {
-          val df5 = new DecimalFormat("#.#%###")
+          val df5 = new DecimalFormat("#.#####")
           if v == -1D then "-"
           else if v.isWhole then v.toInt.toString
           else "(" + df5.format(v) + ")"
