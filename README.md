@@ -24,3 +24,5 @@ val M = milkYield("C", "Q", "T")
 println(M) // prints out a closed-form like \frac{CQ}{T^2}!
 ```
 The closed-form is in LaTeX syntax so that it can be easily interpreted or copy-pasted into a tool like [QuickLatex](https://www.quicklatex.com/) to make it human-readable.
+
+# Syntax and Semantics
