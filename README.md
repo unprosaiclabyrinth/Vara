@@ -25,12 +25,14 @@ println(M) // prints out a closed-form expression e.g. \frac{CQ}{T^2}!
 ```
 The closed-form expression is in LaTeX syntax so that it can be easily interpreted or copy-pasted into a tool like [QuickLatex](https://www.quicklatex.com/) to make it human-readable.
 
-# Operations
+## Syntax and Semantics
 
-# Constructs
+### Operations
 
-# Examples
+### Constructs
 
-# Extensibility
+## Examples
 
-# Future Work
+## Extensibility
+
+## Future Work
