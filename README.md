@@ -11,7 +11,7 @@ def milkYield(numCows: Int, quality: Int, temp: Double): Double = {
 }
 
 val M = milkYield(50, 4, 83)
-println(M) // prints a value like 54.21
+println(M) // prints a value e.g. 54.21
 ```
 
 This can be tweaked using Vara to look like:
@@ -21,8 +21,16 @@ def milkYield(numCows: VaraExpr, quality: VaraExpr, temp: VaraExpr): VaraExpr = 
 }
 
 val M = milkYield("C", "Q", "T")
-println(M) // prints out a closed-form like \frac{CQ}{T^2}!
+println(M) // prints out a closed-form expression e.g. \frac{CQ}{T^2}!
 ```
-The closed-form is in LaTeX syntax so that it can be easily interpreted or copy-pasted into a tool like [QuickLatex](https://www.quicklatex.com/) to make it human-readable.
+The closed-form expression is in LaTeX syntax so that it can be easily interpreted or copy-pasted into a tool like [QuickLatex](https://www.quicklatex.com/) to make it human-readable.
 
-# Syntax and Semantics
+# Operations
+
+# Constructs
+
+# Examples
+
+# Extensibility
+
+# Future Work
