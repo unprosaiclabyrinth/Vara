@@ -30,7 +30,29 @@ The closed-form expression is in LaTeX syntax so that it can be easily interpret
 
 ## Syntax and Semantics
 
+Vara allows manipulating symbolic expressions and using them as first-class values. Every construct you build is represented uniformly as an instance of some subtype of the expression supertype in Vara: **`VaraExpr`**, be it a constant, a variable, a sum, a product, or a more exotic algebraic expression. Variables can be written simply as Strings and Vara will implicitly convert them to type `VaraExpr`. Similarly, Vara implicitly converts constants of type Double to `VaraExpr`. The following are valid expressions in Vara:
+```scala
+val variable: VaraExpr = "x"
+val constant: VaraExpr = 3
+
+val validExpression: VaraExpr = 3.14
+val anotherValidExpression: VaraExpr = "pi"
+```
+
 ### Operations
+
+Variables and constants are the building blocks of all expressions in Vara, and they can be combined using operators that represent different operations. Vara supports a few but integral simple algebraic operations, which along with their operator syntax are:
+
+|      Operation | Vara syntax | Examples                                 |
+|---------------:|:-----------:|:-----------------------------------------|
+|       Addition |    `+#`     | "a" +# 3`, `"x" +# "y" +# "z"`           |
+|    Subtraction |    `-#`     | `4 -# 3`, `"p" -# "q"`, `0 -# "zero"`    |
+| Multiplication |    `*#`     | `"var1" *# "var2" *# "var3"`, `5 *# "k"` |
+|       Division |    `/#`     | `"n" /# "d"`, `"var" /# 2`               |
+| Exponentiation |    `#:`     | `"r" #: "t"`, `"b" #: 2`                 |
+|       Negation |     `-`     | `-"x"`, `-1`                             |
+
+The order of precedence of these operators is the same as the standard for the corresponding numerical operators `+`, `-`, `*`, `/`, `^`, and unary `-`, where `^` has the highest precedence followed by unary `-` followed by (`*`, `/`) followed by (`+`, `-`). Similarly, the symbolic Vara operators have the same associativity as their numerical counterparts: (`+#`, `-#`, `*#`, `/#`) are left-associative, and (`#:`, `-`) are right-associative.
 
 ### Constructs
 
