@@ -14,8 +14,11 @@ val M = milkYield(50, 4, 83)
 println(M) // prints a value e.g. 54.21
 ```
 
-This can be tweaked using Vara to look like:
+This can be tweaked using Vara (note the `import` statements) to look like:
 ```scala
+import org.vara.VaraExpr
+import org.vara.VaraExpr.*
+
 def milkYield(numCows: VaraExpr, quality: VaraExpr, temp: VaraExpr): VaraExpr = {
   // long, complex computation tweaked for VaraExprs
 }
