@@ -45,7 +45,7 @@ Variables and constants are the building blocks of all expressions in Vara, and 
 
 |      Operation | Vara syntax | Examples                                 |
 |---------------:|:-----------:|:-----------------------------------------|
-|       Addition |    `+#`     | "a" +# 3`, `"x" +# "y" +# "z"`           |
+|       Addition |    `+#`     | `"a" +# 3`, `"x" +# "y" +# "z"`          |
 |    Subtraction |    `-#`     | `4 -# 3`, `"p" -# "q"`, `0 -# "zero"`    |
 | Multiplication |    `*#`     | `"var1" *# "var2" *# "var3"`, `5 *# "k"` |
 |       Division |    `/#`     | `"n" /# "d"`, `"var" /# 2`               |
