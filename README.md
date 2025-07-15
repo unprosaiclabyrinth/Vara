@@ -2,7 +2,7 @@
 
 # Vara DSL
 
-Vara is a domain-specific language for simple algebraic symbolic computation implemented in Scala. Why is this powerful? Consider the following problem: a farmer wants to come up with a closed-form formula that computes an hour's total milk yield $$M$$, given the number of dairy cows $$C$$, the average feed-quality index $$Q$$ (1 - 5 scale), and the average daytime temperature $$T$$ (˚F). A friend of hers has come up with a heavy computational routine that exactly computes $$M(C, Q, T)$$, but only runs on a computer. This algorithm would easily time out on the barn's lightweight controller, and it's logistically inconvenient to contact the friend every hour for the answer. The farmer desperately needs a closed-form in terms of $$C$$, $$Q$$, and $$T$$ so that she can plug numbers on her pocket calculator, or compute it by hand. All her friend can tell her are the exact values for $$M(50, 4, 83)$$, $$M(100, 3, 72)$$, and so on but not a closed-form for $$M(C, Q, T)$$. If only the computation could be done symbolically...
+Vara is a domain-specific language for simple algebraic symbolic computation implemented in Scala. Why is this powerful? Consider the following problem: a farmer wants to come up with a [closed-form](https://en.wikipedia.org/wiki/Closed-form_expression) formula that computes an hour's total milk yield $$M$$, given the number of dairy cows $$C$$, the average feed-quality index $$Q$$ (1 - 5 scale), and the average daytime temperature $$T$$ (˚F). A friend of hers has come up with a heavy computational routine that exactly computes $$M(C, Q, T)$$, but only runs on a computer. This algorithm would easily time out on the barn's lightweight controller, and it's logistically inconvenient to contact the friend every hour for the answer. The farmer desperately needs a closed-form in terms of $$C$$, $$Q$$, and $$T$$ so that she can plug numbers on her pocket calculator, or compute it by hand. All her friend can tell her are the exact values for $$M(50, 4, 83)$$, $$M(100, 3, 72)$$, and so on but not a closed-form for $$M(C, Q, T)$$. If only the computation could be done symbolically...
 
 This is where Vara comes in! Suppose the implementation of the complex algorithm looks like:
 ```scala
@@ -30,11 +30,10 @@ The closed-form expression is in LaTeX syntax so that it can be easily interpret
 
 ## Syntax and Semantics
 
-Vara allows manipulating symbolic expressions and using them as first-class values. Every construct you build is represented uniformly as an instance of some subtype of the expression supertype in Vara: **`VaraExpr`**, be it a constant, a variable, a sum, a product, or a more exotic algebraic expression. Variables can be written simply as Strings and Vara will implicitly convert them to type `VaraExpr`. Similarly, Vara implicitly converts constants of type Double to `VaraExpr`. The following are valid expressions in Vara:
+Vara allows manipulating symbolic expressions and using them as first-class values. Every construct you build is represented uniformly as an instance of some subtype of the expression supertype in Vara: **`VaraExpr`**, be it a constant, a variable, a sum, a product, or a more exotic algebraic expression. Variables can be written simply as Strings and Vara will implicitly convert them to type `VaraExpr`. Similarly, Vara implicitly converts constants of type Double to `VaraExpr`. This way, Vara strives to provide natural readability of symbolic expressions. The following are valid expressions in Vara:
 ```scala
 val variable: VaraExpr = "x"
 val constant: VaraExpr = 3
-
 val validExpression: VaraExpr = 3.14
 val anotherValidExpression: VaraExpr = "pi"
 ```
@@ -53,6 +52,9 @@ Variables and constants are the building blocks of all expressions in Vara, and 
 |       Negation |     `-`     | `-"x"`, `-1`                             |
 
 The order of precedence of these operators is the same as the standard for the corresponding numerical operators `+`, `-`, `*`, `/`, `^`, and unary `-`, where `^` has the highest precedence followed by unary `-` followed by (`*`, `/`) followed by (`+`, `-`). Similarly, the symbolic Vara operators have the same associativity as their numerical counterparts: (`+#`, `-#`, `*#`, `/#`) are left-associative, and (`#:`, `-`) are right-associative.
+
+The operators, variables, and constants can be used together to create complex symbolic algebraic expressions. Important conventions that Vara follows under the hood are:
++ Vara folds constants where possible. E.g. `"a" +# 3 -# 2` will be transformed into `"a" +# 1`, and `"b" *# 8 /# 2` will be transformed into `4 *# "b"`.
 
 ### Constructs
 
