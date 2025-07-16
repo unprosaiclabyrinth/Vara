@@ -35,12 +35,12 @@ object Mul2:
         case h :: Nil =>
           if constProd == 1D then h
           else Mul(List(Const(constProd), h) *)
-        case l :: r :: Nil if l.isInstanceOf[Add] && r.isInstanceOf[Add] =>
-          val x = l.asInstanceOf[Add]
-          val y = r.asInstanceOf[Add]
-          val expanded = x.terms.flatMap(el => y.terms.map(er => el *# er)).toList
-          if constProd == 1D then Add(expanded*)
-          else Add(Const(constProd) :: expanded*)
+//        case l :: r :: Nil if l.isInstanceOf[Add] && r.isInstanceOf[Add] =>
+//          val x = l.asInstanceOf[Add]
+//          val y = r.asInstanceOf[Add]
+//          val expanded = x.terms.flatMap(el => y.terms.map(er => el *# er)).toList
+//          if constProd == 1D then Add(expanded*)
+//          else Add(Const(constProd) :: expanded*)
         case _ =>
           if constProd == 1D then Mul(varTerms*)
           else Mul(Const(constProd) :: varTerms*)
