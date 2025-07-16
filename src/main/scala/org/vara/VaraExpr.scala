@@ -40,7 +40,7 @@ trait VaraExpr:
 
   def printAST(): Unit = println(ast(this, ""))
 
-  private def contains(e: VaraExpr): Boolean =
+  infix def contains(e: VaraExpr): Boolean =
     this == e || {
       this match
         case Add(terms*) => e match
