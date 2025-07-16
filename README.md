@@ -52,11 +52,11 @@ Variables and constants are the building blocks of all expressions in Vara, and 
 | Exponentiation |    `#:`     | `"r" #: "t"`, `"b" #: 2`                 |
 |       Negation |     `-`     | `-"x"`, `-1`                             |
 
-The order of precedence of these operators is the same as the standard for the corresponding numerical operators `+`, `-`, `*`, `/`, `^`, and unary `-`, where `^` has the highest precedence followed by unary `-` followed by (`*`, `/`) followed by (`+`, `-`). Similarly, the symbolic Vara operators have the same associativity as their numerical counterparts: (`+#`, `-#`, `*#`, `/#`) are left-associative, and (`#:`, `-`) are right-associative. You can control the evaluation order by wrapping sub-expressions in parentheses, ensuring they’re computed first. This is in alignment with the standard that parentheses have precedence over all operators. The operators, variables, constants, and parentheses can be used together to create complex symbolic algebraic expressions. Under the hood, Vara builds an abstract syntax tree (AST) for an expression based on the order of precedence and the associativity of operators. There are some conventions that Vara follows while structuring the AST for an expression:
-+ Vara folds constants where possible. E.g. `"a" +# 3 -# 2` $$\to$$ `"a" +# 1`, and `"b" *# 8 /# 2` $$\to$$ `4 *# "b"`.
-+ Vara simplifies a sum of like algebraic terms to a product with a constant. E.g. `"x" +# "x" +# "x" -# "x"` $$\to$$ `2 *# "xy"`.
-+ Vara simplifies a product of like algebraic terms to an exponent with a constant power. E.g. `"x" *# "x" *# "x" /# "x"` $$\to$$ `"x" #: 2`.
-+ Vara uses laws of indices to simplify exponents. E.g. `("a" #: "m") /# ("a" #: "n")` $$\to$$ `"a" #: ("m" +# "n")`, `("a" #: "m") #: "n"` $$\to$$ `"a" #: ("m" *# "n")`.
+The order of precedence of these operators is the same as the standard for the corresponding numerical operators `+`, `-`, `*`, `/`, `^`, and unary `-`, where `^` has the highest precedence followed by unary `-` followed by (`*`, `/`) followed by (`+`, `-`). Similarly, the symbolic Vara operators have the same associativity as their numerical counterparts: (`+#`, `-#`, `*#`, `/#`) are left-associative, and (`#:`, `-`) are right-associative. You can control the evaluation order by wrapping sub-expressions in parentheses, ensuring they’re computed first. This is in alignment with the standard that parentheses have precedence over all operators. The operators, variables, constants, and parentheses can be used together to create complex symbolic algebraic expressions. Under the hood, Vara builds an abstract syntax tree (AST) for an expression based on the order of precedence and the associativity of operators. There are some conventions that Vara follows while structuring the AST for an expression. Vara:
++ folds constants where possible. E.g. `"a" +# 3 -# 2` $$\to$$ `"a" +# 1`, and `"b" *# 8 /# 2` $$\to$$ `4 *# "b"`.
++ simplifies a sum of like algebraic terms to a product with a constant. E.g. `"x" +# "x" +# "x" -# "x"` $$\to$$ `2 *# "x"`.
++ simplifies a product of like algebraic terms to an exponent with a constant power. E.g. `"x" *# "x" *# "x" /# "x"` $$\to$$ `"x" #: 2`.
++ uses laws of indices to simplify exponents. E.g. `("a" #: "m") /# ("a" #: "n")` $$\to$$ `"a" #: ("m" +# "n")`, `("a" #: "m") #: "n"` $$\to$$ `"a" #: ("m" *# "n")`.
 
 Along with the algebraic operations, Vara also supports two Boolean operations on symbolic expressions:
 
@@ -67,7 +67,7 @@ Along with the algebraic operations, Vara also supports two Boolean operations o
 
 These operators perform a **structural comparison** of two `VaraExpr` trees, returning `true` if their AST shapes are identical (`==`) or different (`!=`).
 
-### Constructs
+### API
 
 ## Examples
 
