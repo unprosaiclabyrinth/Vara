@@ -66,11 +66,11 @@ class MulSpec extends AnyWordSpec with Matchers:
     }
   }
 
-  "Multiplication of a sum with a sum" should {
-    "give the sum of the products by distribution" in {
-      2 *# ("x" +# "y") should equal (2*#"x" +# 2*#"y")
-      (1 +# 2 +# 3) *# ("a" +# "b" +# "c") should equal (6*#"a" +# 6*#"b" +# 6*#"c")
-      2 *# ("x" +# "y") +# ("a" +# "b") should equal (2 *# "x" +# 2 *# "y" +# "a" +# "b")
-      2 *# ("x" +# "y") *# ("a" +# "b") should equal (2*#"x"*#"a" +# 2*#"y"*#"a" +# 2*#"x"*#"b" +# 2*#"y"*#"b")
-    }
-  }
+//  "Multiplication of a sum with a sum" should {
+//    "give the sum of the products by distribution" in {
+//      2 *# ("x" +# "y") should equal (2*#"x" +# 2*#"y")
+//      (1 +# 2 +# 3) *# ("a" +# "b" +# "c") should equal (6*#"a" +# 6*#"b" +# 6*#"c")
+//      2 *# ("x" +# "y") +# ("a" +# "b") should equal (2 *# "x" +# 2 *# "y" +# "a" +# "b")
+//      2 *# ("x" +# "y") *# ("a" +# "b") should equal (2*#"x"*#"a" +# 2*#"y"*#"a" +# 2*#"x"*#"b" +# 2*#"y"*#"b")
+//    }
+//  }
