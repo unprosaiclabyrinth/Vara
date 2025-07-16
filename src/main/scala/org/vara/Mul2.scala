@@ -42,5 +42,5 @@ object Mul2:
 //          if constProd == 1D then Add(expanded*)
 //          else Add(Const(constProd) :: expanded*)
         case _ =>
-          if constProd == 1D then Mul(varTerms*)
-          else Mul(Const(constProd) :: varTerms*)
+          if constProd == 1D then Mul(varTerms *)
+          else Mul(Const(constProd) :: varTerms *)

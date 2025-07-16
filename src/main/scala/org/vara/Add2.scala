@@ -35,7 +35,7 @@ object Add2:
       case Nil => Const(constSum)
       case h :: Nil =>
         if constSum == 0D then h
-        else Add(List(h, Const(constSum))*)
+        else Add(List(h, Const(constSum)) *)
       case _ =>
-        if constSum == 0D then Add(varTerms*)
-        else Add(varTerms :+ Const(constSum)*)
+        if constSum == 0D then Add(varTerms *)
+        else Add(varTerms :+ Const(constSum) *)
