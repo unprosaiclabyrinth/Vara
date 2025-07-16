@@ -6,15 +6,15 @@ import org.vara.VaraExpr.*
 class MulSpec extends AnyWordSpec with Matchers:
   "Times" should {
     "multiply two constants correctly" in {
-      2 *# 2 should equal(4)
-      411 *# 511 should equal(411 * 511)
-      3.14 *# 2.71 should equal(3.14 * 2.71)
-      -5 *# 5 should equal(-25)
-      -7.89 *# -1.23 should equal(7.89 * 1.23)
-      0 *# 0 should be(0)
+      2 *# 2 should equal (4)
+      411 *# 511 should equal (411 * 511)
+      3.14 *# 2.71 should equal (3.14 * 2.71)
+      -5 *# 5 should equal (-25)
+      -7.89 *# -1.23 should equal (7.89 * 1.23)
+      0 *# 0 should be (0)
     }
     "multiply two variables correctly" in {
-      "a" *# "b" should equal("a"*#"b")
+      "a" *# "b" should equal ("a"*#"b")
       "a" *# "b" should not equal ("A"*#"b")
       "a" *# "b" should not equal "ab"
       "a" *# "b" *# "c" should equal ("a"*#"b"*#"c")
