@@ -40,6 +40,21 @@ trait VaraExpr:
 
   def printAST(): Unit = println(ast(this, ""))
 
+  private def contains(e: VaraExpr): Boolean =
+    this == e || {
+      this match
+        case Add(terms*) => e match
+          case Add(subterms*) =>
+            (terms exists (_.contains(e))) || (subterms forall (terms contains))
+          case _ => terms exists (_.contains(e))
+        case Mul(terms*) => e match
+          case Mul(subterms*) =>
+            (terms exists (_.contains(e))) || (subterms forall (terms contains))
+          case _ => terms exists (_.contains(e))
+        case Pow(a, b) => a.contains(e) || b.contains(e)
+        case _ => false // this==e is already checked
+    }
+
 object VaraExpr:
   type VaraEnv = Map[String, VaraExpr]
   given emptyEnv: VaraEnv = Map.empty
