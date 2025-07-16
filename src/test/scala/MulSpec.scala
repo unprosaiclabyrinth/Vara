@@ -21,11 +21,11 @@ class MulSpec extends AnyWordSpec with Matchers:
       "a" *# "b" *# "c" should not equal "abc"
     }
     "be commutative" in {
-      2 *# 3 should equal(3 *# 2)
-      "b" *# "a" should equal("b" *# "a")
+      2 *# 3 should equal (3 *# 2)
+      "a" *# "b" should equal ("b" *# "a")
     }
     "be associative" in {
-      "a" *# ("b" *# "c") should equal(("a" *# "b") *# "c")
+      "a" *# ("b" *# "c") should equal (("a" *# "b") *# "c")
     }
     "multiply constants and variables correctly" in {
       2 *# "a" should equal (2*#"a")
@@ -39,13 +39,13 @@ class MulSpec extends AnyWordSpec with Matchers:
       }
     }
     "exponentiate like terms" in {
-      "a" *# "a" should equal("a"#:2)
-      "a" *# "b" *# "a" should equal("b" *# "a"#:2)
-      "a"#:5 *# "a"#:7 should equal("a"#:12)
+      "a" *# "a" should equal ("a"#:2)
+      "a" *# "b" *# "a" should equal ("b" *# "a"#:2)
+      "a"#:5 *# "a"#:7 should equal ("a"#:12)
       "a"#:"b" *# "a"#:"c" should equal ("a"#:("b" +# "c"))
     }
     "not change terms involving exponentiation and different bases" in {
-      "a"#:"A" *# "b"#:"B" should equal("a"#:"A" *# "b"#:"B")
+      "a"#:"A" *# "b"#:"B" should equal ("a"#:"A" *# "b"#:"B")
     }
   }
 
@@ -54,7 +54,7 @@ class MulSpec extends AnyWordSpec with Matchers:
       "a" *# 1 should equal ("a")
       1 *# "a" *# 1 should equal ("a")
       "a" *# 1 *# 1 *# "b" *# 1 *# "c" should equal ("a"*#"b"*#"c")
-      (1 to 1000).foldLeft(e(1))((acc, _) => acc*#1*#"a") should equal("a"#:1000)
+      (1 to 1000).foldLeft(e(1))((acc, _) => acc*#1*#"a") should equal ("a"#:1000)
     }
   }
 
