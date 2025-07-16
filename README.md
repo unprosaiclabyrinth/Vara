@@ -31,7 +31,7 @@ The closed-form expression is in LaTeX syntax so that it can be easily interpret
 
 ## Syntax and Semantics
 
-Vara allows manipulating symbolic expressions and using them as first-class values. Every construct you build is represented uniformly as an instance of some subtype of the expression supertype in Vara: **`VaraExpr`**, be it a constant, a variable, a sum, a product, or a more exotic algebraic expression. Variables can be written simply as Strings and Vara will implicitly convert them to type `VaraExpr` given the import `org.vara.Variable`. Similarly, Vara implicitly converts constants of type Double to `VaraExpr` given the import `org.vara.VaraExpr.*`. This way, Vara strives to provide natural readability of symbolic expressions. The following are valid expressions in Vara:
+Vara allows manipulating symbolic expressions and using them as first-class values. Every construct you build is represented uniformly as an instance of some subtype of the expression supertype in Vara: **`VaraExpr`**, be it a constant, a variable, a sum, a product, or a more exotic algebraic expression. Variables can be written simply as Strings and Vara will implicitly convert them to type `VaraExpr` given the import `org.vara.Variable`. Similarly, Vara implicitly converts constants of supertypes Int or Double to `VaraExpr` given the import `org.vara.VaraExpr.*`. This way, Vara strives to provide natural readability of symbolic expressions. The following are valid expressions in Vara:
 ```scala
 val variable: VaraExpr = "x"
 val constant: VaraExpr = 3
