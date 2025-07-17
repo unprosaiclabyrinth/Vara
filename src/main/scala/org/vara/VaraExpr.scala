@@ -69,7 +69,7 @@ object VaraExpr:
 
   infix inline def e(inline d: Double): VaraExpr = d
 
-  /* put API */
+  /** `put` API */
   case class Put(bindings: (String, VaraExpr)*):
     infix def in(expr: VaraExpr): VaraExpr =
       val env = summon[VaraEnv]
@@ -77,7 +77,7 @@ object VaraExpr:
 
   infix def put(bindings: (String, VaraExpr)*): Put = Put(bindings *)
 
-  /* replace API */
+  /** `replace` API */
   case class ReplaceWith(old: VaraExpr, replacement: VaraExpr):
     infix def in(expr: VaraExpr): VaraExpr =
       if !expr.contains(old) then expr
@@ -111,33 +111,22 @@ object VaraExpr:
 
   infix def replace(old: VaraExpr): Replace = Replace(old)
 
-  /** distribution API */
-  case class Distribute():
-    infix def product(prod: VaraExpr): DistributeProduct = DistributeProduct(prod)
+  /** `distribute` API */
+  case class Distribute(e1: VaraExpr):
+    infix def over(e2: VaraExpr): DistributeOver = DistributeOver(e1, e2)
 
-    infix def exponent(exp: VaraExpr): DistributeExponent = DistributeExponent(exp)
-
-  val distribute: Distribute = Distribute()
-
-  case class DistributeProduct(prod: VaraExpr):
-    infix def over(sum: VaraExpr): DistributeProductOver = DistributeProductOver(prod, sum)
-
-  case class DistributeExponent(exp: VaraExpr):
-    infix def over(prod: VaraExpr): DistributeExponentOver = DistributeExponentOver(exp, prod)
-
-  case class DistributeProductOver(prod: VaraExpr, sum: VaraExpr):
-    infix def in(e: VaraExpr): VaraExpr = sum match
+  case class DistributeOver(e1: VaraExpr, e2: VaraExpr):
+    infix def in(e: VaraExpr): VaraExpr = e2 match
       case Add(terms *) =>
         val distributed: VaraExpr = terms.foldLeft(Const(0).asInstanceOf[VaraExpr]) {
-          case (acc, t) => acc +# (t *# prod)
+          case (acc, t) => acc +# (e1 *# t)
         }
-        replace (prod *# sum) withExpr distributed in e
-      case _ => e
-
-  case class DistributeExponentOver(exp: VaraExpr, prod: VaraExpr):
-    infix def in(e: VaraExpr): VaraExpr = prod match
+        replace (e1 *# e2) withExpr distributed in e
       case Mul(terms *) =>
         val distributed: VaraExpr = terms.foldLeft(Const(1).asInstanceOf[VaraExpr]) {
-          case (acc, t) => acc *# (t #: exp)
+          case (acc, t) => acc *# (t #: e1)
         }
-        replace (prod #: exp) withExpr distributed in e
+        replace (e2 #: e1) withExpr distributed in e
+      case _ => e
+
+  infix def distribute(e1: VaraExpr): Distribute = Distribute(e1)
