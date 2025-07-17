@@ -3,8 +3,6 @@ import org.scalatest.matchers.should.Matchers
 import org.vara.Variable
 import org.vara.VaraExpr.*
 
-import scala.language.postfixOps
-
 class APISpec extends AnyWordSpec with Matchers:
   "contains" should {
     "return true if sub-expression is present" in {
@@ -44,5 +42,17 @@ class APISpec extends AnyWordSpec with Matchers:
       val e3 = ("a" +# "b") *# ("c" +# "d") *# ("e" +# "f"  +# "g")
       (replace ("e" +# "g") withExpr "f"#:"k" in e3) should equal (("a" +# "b") *# ("c" +# "d") *# ("f"#:"k" +# "f"))
       (replace (("a" +# "b") *# ("c" +# "d")) withExpr "a"*#"c" +# "b"*#"d" in e3) should equal (("a"*#"c" +# "b"*#"d") *# ("e" +# "f" +# "g"))
+    }
+  }
+
+  "distribute" should {
+    "distribute a product over a sum correctly" in {
+      val e = ("a" +# "b") *# ("c" +# "d")
+      (distribute ("a" +# "b") over "c" +# "d" in e) should equal (("a" +# "b")*#"c" +# ("a" +# "b")*#"d")
+      (distribute (2) over "foo" +# "bar" in e) should equal (e)
+      (distribute ("a") over "c" +# "d" in e) should equal (e)
+      (distribute ("c" +# "d") over "a" +# "b" in e) should equal ("a"*#("c" +# "d") +# "b"*#("c" +# "d"))
+      val e1 = 2*#("f" +# "g")
+      (distribute (2) over "f" +# "g" in e1) should equal (2*#"f" +# 2*#"g")
     }
   }
