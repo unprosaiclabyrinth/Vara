@@ -40,5 +40,9 @@ class APISpec extends AnyWordSpec with Matchers:
       (replace ("a"#:("m" +# "n")) withExpr 5*#"b" in e1) should equal (6*#"b"*#("c" +# "d"))
       val e2 = ("a" *# "b" *# "c" *# ("e" *# "f") #: 3) /# ("d" *# "e" *# "f")
       (replace("b" *# "c") withExpr "e" /# ("f" #: 2) in e2) should equal (("a" *# "e"#:3) /# "d")
+      (replace ("b" *# "c" *# ("e" *# "f") #: 2) withExpr "b" +# "c" +# "e" in e2) should equal (("a" *# ("b" +# "c" +# "e")) /# "d")
+      val e3 = ("a" +# "b") *# ("c" +# "d") *# ("e" +# "f"  +# "g")
+      (replace ("e" +# "g") withExpr "f"#:"k" in e3) should equal (("a" +# "b") *# ("c" +# "d") *# ("f"#:"k" +# "f"))
+      (replace (("a" +# "b") *# ("c" +# "d")) withExpr "a"*#"c" +# "b"*#"d" in e3) should equal (("a"*#"c" +# "b"*#"d") *# ("e" +# "f" +# "g"))
     }
   }
