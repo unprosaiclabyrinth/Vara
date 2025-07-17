@@ -31,3 +31,14 @@ class APISpec extends AnyWordSpec with Matchers:
       e2.contains("c" /# "f"*#"d") should be (false)
     }
   }
+
+  "replace" should {
+    "replace all instances correctly" in {
+      val e = "a" +# 1
+      (replace ("a") withExpr 2 in e) should equal (3)
+      val e1 = ("a"#:("m" +# "n") +# "b") *# ("c" +# "d")
+      (replace ("a"#:("m" +# "n")) withExpr 5*#"b" in e1) should equal (6*#"b"*#("c" +# "d"))
+      val e2 = ("a" *# "b" *# "c" *# ("e" *# "f") #: 3) /# ("d" *# "e" *# "f")
+      (replace("b" *# "c") withExpr "e" /# ("f" #: 2) in e2) should equal (("a" *# "e"#:3) /# "d")
+    }
+  }
