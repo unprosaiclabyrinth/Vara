@@ -24,4 +24,7 @@ object Pow:
     case (b, Const(1D)) => b
     case (Const(b), Const(i)) => Const(math.pow(b, i))
     case (Pow(u, v), _) => new Pow(u, v*#index)
+    case (Mul(prod *), Const(-1)) => prod.foldLeft(Const(1).asInstanceOf[VaraExpr]){
+      (acc, term) => acc *# new Pow(term, index)
+    }
     case _ => new Pow(base, index)
