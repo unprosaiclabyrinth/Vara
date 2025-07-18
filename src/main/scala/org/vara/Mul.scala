@@ -45,7 +45,8 @@ final case class Mul(terms: VaraExpr*) extends VaraExpr:
           }
       }
       // the first element is the constant
-      if strings.head.forall(c => c.isDigit || c == '-' || c == '.') then
+      if strings.length == 1 then strings.head.stripPrefix("(").stripSuffix(")")
+      else if strings.head.forall(c => c.isDigit || c == '-' || c == '.') then
         strings.head + strings.tail.sortBy(_.length).mkString
       else strings.sortBy(_.length).mkString
 
