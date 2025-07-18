@@ -1,7 +1,9 @@
 package org.vara
 
+import scala.annotation.tailrec
 import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Failure, Success, Try}
+import scala.math.abs
 
 /* Expression AST */
 trait VaraExpr:
@@ -130,3 +132,40 @@ object VaraExpr:
       case _ => e
 
   infix def distribute(e1: VaraExpr): Distribute = Distribute(e1)
+
+  /** `expand` API */
+  case class Expand(e: VaraExpr):
+    private def expand2(sum1: Add, sum2: Add): Add =
+      val e = sum1 *# sum2
+      val d = distribute (sum1) over sum2 in e
+      sum2.terms.foldLeft(d) {
+        (acc, t) => distribute (t) over sum1 in acc
+      }.asInstanceOf[Add]
+
+    @tailrec
+    private def expandN(sums: Add*): VaraExpr =
+      require(sums.length >= 2)
+      val d = expand2(sums.head, sums.tail.head)
+      if sums.length == 2 then d
+      else expandN(d +: sums.tail.tail *)
+
+    infix def in(expr: VaraExpr): VaraExpr = e match
+      case Mul(prod *) =>
+        val sums: Seq[Add] = prod.filter(_.isInstanceOf[Add]).map(_.asInstanceOf[Add])
+        if sums.length <= 1 then expr
+        else
+          val expansion = expandN(sums *)
+          val factors = prod.filterNot(_.isInstanceOf[Mul | Add])
+          replace (e) withExpr (
+            distribute (Mul(factors *)) over expansion in Mul(expansion +: factors *)
+          ) in expr
+      case Pow(base, Const(v)) =>
+        if !v.isWhole then expr
+        else
+          val prod = Mul(List.fill(abs(v.toInt))(base) *)
+          val expansion = expand (prod) in prod
+          if v < 0 then replace (e) withExpr 1/#expansion in expr
+          else replace (e) withExpr expansion in expr
+      case _ => expr
+
+  infix def expand(e: VaraExpr): Expand = Expand(e)
