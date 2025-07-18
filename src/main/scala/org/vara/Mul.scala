@@ -45,7 +45,9 @@ final case class Mul(terms: VaraExpr*) extends VaraExpr:
           }
       }
       // the first element is the constant
-      strings.head + strings.tail.sortBy(_.length).mkString
+      if strings.head.forall(c => c.isDigit || c == '-' || c == '.') then
+        strings.head + strings.tail.sortBy(_.length).mkString
+      else strings.sortBy(_.length).mkString
 
   override def equals(that: Any): Boolean = that match
     case Mul(those*) => those.toSet == terms.toSet
