@@ -57,6 +57,8 @@ trait VaraExpr:
         case _ => false // this==e is already checked
     }
 
+  infix def expanded: VaraExpr = VaraExpr.expand (this) in this
+
 object VaraExpr:
   type VaraEnv = Map[String, VaraExpr]
   given emptyEnv: VaraEnv = Map.empty
