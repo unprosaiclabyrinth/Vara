@@ -29,20 +29,23 @@ final case class Mul(terms: VaraExpr*) extends VaraExpr:
         else ""
       sign + "\\frac{" + sn.stripPrefix("-") + "}{" + sd.stripPrefix("-") + "}"
     else
-      terms.foldLeft("")((acc, e) => e match
-        case Const(v) => acc + {
-          val df5 = new DecimalFormat("#.#####")
-          if v == -1D then "-"
-          else if v.isWhole then v.toInt.toString
-          else "(" + df5.format(v) + ")"
-        }
-        case _: Pow => acc + e.toString
-        case _ => acc + {
-          val s = e.toString
-          if s.length == 1 then s
-          else "(" + s + ")"
-        }
-      )
+      val strings = terms.foldLeft(List.empty[String]) {
+        (acc, e) => e match
+          case Const(v) => acc :+ {
+            val df5 = new DecimalFormat("#.#####")
+            if v == -1D then "-"
+            else if v.isWhole then v.toInt.toString
+            else "(" + df5.format(v) + ")"
+          }
+          case _: Pow => acc :+ e.toString
+          case _ => acc :+ {
+            val s = e.toString
+            if s.length == 1 then s
+            else "(" + s + ")"
+          }
+      }
+      // the first element is the constant
+      strings.head + strings.tail.sortBy(_.length).mkString
 
   override def equals(that: Any): Boolean = that match
     case Mul(those*) => those.toSet == terms.toSet
