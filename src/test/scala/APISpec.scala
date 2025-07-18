@@ -30,18 +30,18 @@ class APISpec extends AnyWordSpec with Matchers:
     }
   }
 
-  "replace" should {
-    "replace all instances correctly" in {
+  "substitute" should {
+    "substitute all instances correctly" in {
       val e = "a" +# 1
-      (replace ("a") withExpr 2 in e) should equal (3)
+      (substitute (2) forExpr "a" in e) should equal (3)
       val e1 = ("a"#:("m" +# "n") +# "b") *# ("c" +# "d")
-      (replace ("a"#:("m" +# "n")) withExpr 5*#"b" in e1) should equal (6*#"b"*#("c" +# "d"))
+      (substitute (5*#"b") forExpr "a"#:("m" +# "n") in e1) should equal (6*#"b"*#("c" +# "d"))
       val e2 = ("a" *# "b" *# "c" *# ("e" *# "f") #: 3) /# ("d" *# "e" *# "f")
-      (replace("b" *# "c") withExpr "e" /# ("f" #: 2) in e2) should equal (("a" *# "e"#:3) /# "d")
-      (replace ("b" *# "c" *# ("e" *# "f") #: 2) withExpr "b" +# "c" +# "e" in e2) should equal (("a" *# ("b" +# "c" +# "e")) /# "d")
+      (substitute ("e" /# ("f" #: 2)) forExpr "b" *# "c" in e2) should equal (("a" *# "e"#:3) /# "d")
+      (substitute ("b" +# "c" +# "e") forExpr "b" *# "c" *# ("e" *# "f") #: 2 in e2) should equal (("a" *# ("b" +# "c" +# "e")) /# "d")
       val e3 = ("a" +# "b") *# ("c" +# "d") *# ("e" +# "f"  +# "g")
-      (replace ("e" +# "g") withExpr "f"#:"k" in e3) should equal (("a" +# "b") *# ("c" +# "d") *# ("f"#:"k" +# "f"))
-      (replace (("a" +# "b") *# ("c" +# "d")) withExpr "a"*#"c" +# "b"*#"d" in e3) should equal (("a"*#"c" +# "b"*#"d") *# ("e" +# "f" +# "g"))
+      (substitute ("f"#:"k") forExpr "e" +# "g" in e3) should equal (("a" +# "b") *# ("c" +# "d") *# ("f"#:"k" +# "f"))
+      (substitute ("a"*#"c" +# "b"*#"d") forExpr ("a" +# "b") *# ("c" +# "d") in e3) should equal (("a"*#"c" +# "b"*#"d") *# ("e" +# "f" +# "g"))
     }
   }
 
@@ -54,5 +54,15 @@ class APISpec extends AnyWordSpec with Matchers:
       (distribute ("c" +# "d") over "a" +# "b" in e) should equal ("a"*#("c" +# "d") +# "b"*#("c" +# "d"))
       val e1 = 2*#("f" +# "g")
       (distribute (2) over "f" +# "g" in e1) should equal (2*#"f" +# 2*#"g")
+      val e2 = ("a" +# "b") *# ("c" +# "d") *# ("m" +# "n")
+      (distribute ("a" +# "b") over "c" +# "d" in e2) should equal ((("a" +# "b")*#"c" +# ("a" +# "b")*#"d") *# ("m" +# "n"))
+    }
+    // TODO: Test distribution of exp over prod
+  }
+
+  "expand" should {
+    "fully expand all occurrences of a product of sums" in {
+      val e = ("a" +# "b") *# ("c" +# "d") *# ("e" +# "f")
+      expand (("a" +# "b") *# ("c" +# "d")) in e
     }
   }

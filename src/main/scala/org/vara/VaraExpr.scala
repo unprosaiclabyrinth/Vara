@@ -79,39 +79,39 @@ object VaraExpr:
 
   infix def put(bindings: (String, VaraExpr)*): Put = Put(bindings *)
 
-  /** `replace` API */
-  case class ReplaceWith(old: VaraExpr, replacement: VaraExpr):
+  /** `substitute` API */
+  case class SubstituteFor(substitution: VaraExpr, old: VaraExpr):
     infix def in(expr: VaraExpr): VaraExpr =
       if !expr.contains(old) then expr
-      else if old == expr then replacement
+      else if old == expr then substitution
       else expr match
         case Add(sum*) =>
           if old.isInstanceOf[Add] && old.asInstanceOf[Add].terms.forall(sum contains) then
             val subsum = old.asInstanceOf[Add].terms
-            sum.filterNot(subsum contains).foldLeft(replacement)(
+            sum.filterNot(subsum contains).foldLeft(substitution)(
               (acc, term) => acc +# term
             )
-          else if sum contains old then sum.filterNot(_ == old).foldLeft(replacement) {
+          else if sum contains old then sum.filterNot(_ == old).foldLeft(substitution) {
             (acc, term) => acc +# term
           }
           else sum.foldLeft(e(0))((acc, term) => acc +# in(term))
         case Mul(prod*) =>
           if old.isInstanceOf[Mul] && old.asInstanceOf[Mul].terms.forall(prod contains) then
             val subprod = old.asInstanceOf[Mul].terms
-            prod.filterNot(subprod contains).foldLeft(replacement)(
+            prod.filterNot(subprod contains).foldLeft(substitution)(
               (acc, term) => acc *# term
             )
-          else if prod contains old then prod.filterNot(_ == old).foldLeft(replacement) {
+          else if prod contains old then prod.filterNot(_ == old).foldLeft(substitution) {
             (acc, term) => acc *# term
           }
           else prod.foldLeft(e(1))((acc, term) => acc *# in(term))
         case Pow(a, b) => in(a) #: in(b)
         case _ => expr // old==expr is already checked
 
-  case class Replace(old: VaraExpr):
-    infix def withExpr(replacement: VaraExpr): ReplaceWith = ReplaceWith(old, replacement)
+  case class Substitute(substitution: VaraExpr):
+    infix def forExpr(old: VaraExpr): SubstituteFor = SubstituteFor(substitution, old)
 
-  infix def replace(old: VaraExpr): Replace = Replace(old)
+  infix def substitute(substitution: VaraExpr): Substitute = Substitute(substitution)
 
   /** `distribute` API */
   case class Distribute(e1: VaraExpr):
@@ -123,12 +123,12 @@ object VaraExpr:
         val distributed: VaraExpr = terms.foldLeft(Const(0).asInstanceOf[VaraExpr]) {
           case (acc, t) => acc +# (e1 *# t)
         }
-        replace (e1 *# e2) withExpr distributed in e
+        substitute (distributed) forExpr e1 *# e2 in e
       case Mul(terms *) =>
         val distributed: VaraExpr = terms.foldLeft(Const(1).asInstanceOf[VaraExpr]) {
           case (acc, t) => acc *# (t #: e1)
         }
-        replace (e2 #: e1) withExpr distributed in e
+        substitute (distributed) forExpr e2 #: e1 in e
       case _ => e
 
   infix def distribute(e1: VaraExpr): Distribute = Distribute(e1)
@@ -156,16 +156,16 @@ object VaraExpr:
         else
           val expansion = expandN(sums *)
           val factors = prod.filterNot(_.isInstanceOf[Mul | Add])
-          replace (e) withExpr (
+          substitute (
             distribute (Mul(factors *)) over expansion in Mul(expansion +: factors *)
-          ) in expr
+          ) forExpr e in expr
       case Pow(base, Const(v)) =>
         if !v.isWhole then expr
         else
           val prod = Mul(List.fill(abs(v.toInt))(base) *)
           val expansion = expand (prod) in prod
-          if v < 0 then replace (e) withExpr 1/#expansion in expr
-          else replace (e) withExpr expansion in expr
+          if v < 0 then substitute (1 /# expansion) forExpr e in expr
+          else substitute (expansion) forExpr e in expr
       case _ => expr
 
   infix def expand(e: VaraExpr): Expand = Expand(e)
