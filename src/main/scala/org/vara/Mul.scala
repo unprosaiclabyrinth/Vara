@@ -25,7 +25,7 @@ final case class Mul(terms: VaraExpr*) extends VaraExpr:
         denom.foldLeft(e(1D))((acc, d) => acc *# d).toString)
       val sign =
         if (sn.startsWith("-") && !sd.startsWith("-")) ||
-          (!sn.startsWith("-") && sd.startsWith("-")) then "-"
+           (!sn.startsWith("-") && sd.startsWith("-")) then "-"
         else ""
       sign + "\\frac{" + sn.stripPrefix("-") + "}{" + sd.stripPrefix("-") + "}"
     else
