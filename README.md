@@ -69,7 +69,7 @@ Along with the algebraic operations, Vara also supports two Boolean operations o
 
 These operators perform a **structural comparison** of two `VaraExpr` trees, returning `true` if their AST shapes are identical (`==`) or different (`!=`).
 
-### API
+### APIs
 
 ## Examples
 
