@@ -72,6 +72,16 @@ object VaraExpr:
   infix inline def e(inline i: Int): VaraExpr = i
 
   infix inline def e(inline d: Double): VaraExpr = d
+  
+  private def pruneAST(e: VaraExpr): VaraExpr = e match
+    case Add(sum *) =>
+      if sum.length == 1 then pruneAST(sum.head)
+      else Add(sum.map(pruneAST) *)
+    case Mul(prod *) =>
+      if prod.length == 1 then pruneAST(prod.head)
+      else Mul(prod.map(pruneAST) *)
+    case Pow(a, b) => pruneAST(a) #: pruneAST(b)
+    case _ => e
 
   /** `put` API */
   case class Put(bindings: (String, VaraExpr)*):
@@ -87,10 +97,9 @@ object VaraExpr:
       if !expr.contains(old) then expr
       else if old == expr then substitution
       else expr match
-        case Add(sum*) =>
+        case Add(sum *) =>
           if old.isInstanceOf[Add] && old.asInstanceOf[Add].terms.forall(sum contains) then
-            val subsum = old.asInstanceOf[Add].terms
-            sum.filterNot(subsum contains).foldLeft(substitution)(
+            sum.filterNot(old.asInstanceOf[Add].terms contains).foldLeft(substitution)(
               (acc, term) => acc +# term
             )
           else if sum contains old then sum.filterNot(_ == old).foldLeft(substitution) {
@@ -99,8 +108,7 @@ object VaraExpr:
           else sum.foldLeft(e(0))((acc, term) => acc +# in(term))
         case Mul(prod*) =>
           if old.isInstanceOf[Mul] && old.asInstanceOf[Mul].terms.forall(prod contains) then
-            val subprod = old.asInstanceOf[Mul].terms
-            prod.filterNot(subprod contains).foldLeft(substitution)(
+            prod.filterNot(old.asInstanceOf[Mul].terms contains).foldLeft(substitution)(
               (acc, term) => acc *# term
             )
           else if prod contains old then prod.filterNot(_ == old).foldLeft(substitution) {
@@ -158,9 +166,11 @@ object VaraExpr:
         else
           val expansion = expandN(sums *)
           val factors = prod.filterNot(_.isInstanceOf[Mul | Add])
-          substitute (
-            distribute (Mul(factors *)) over expansion in Mul(expansion +: factors *)
-          ) forExpr e in expr
+          if factors.nonEmpty then
+            substitute (
+              distribute (Mul(factors *)) over expansion in Mul(expansion +: factors *)
+            ) forExpr e in expr
+          else expansion
       case Pow(base, Const(v)) =>
         if !v.isWhole then expr
         else
@@ -171,3 +181,5 @@ object VaraExpr:
       case _ => expr
 
   infix def expand(e: VaraExpr): Expand = Expand(e)
+
+  //TODO: `factor` API
