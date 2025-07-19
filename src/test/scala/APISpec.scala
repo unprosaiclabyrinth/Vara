@@ -57,12 +57,24 @@ class APISpec extends AnyWordSpec with Matchers:
       val e2 = ("a" +# "b") *# ("c" +# "d") *# ("m" +# "n")
       (distribute ("a" +# "b") over "c" +# "d" in e2) should equal ((("a" +# "b")*#"c" +# ("a" +# "b")*#"d") *# ("m" +# "n"))
     }
-    // TODO: Test distribution of exp over prod
+    "distribute an exponent over a product correctly" in {
+      val e = ("a" *# "b" *# "c")#:"k"
+      (distribute ("k") over "a"*#"b"*#"c" in e) should equal ("a"#:"k" *# "b"#:"k" *# "c"#:"k")
+      val e1 = ("m" *# ("n" +# "l"))#:("c" +# "d")
+    }
   }
 
   "expand" should {
     "fully expand all occurrences of a product of sums" in {
       val e = ("a" +# "b") *# ("c" +# "d") *# ("e" +# "f")
-      expand (("a" +# "b") *# ("c" +# "d")) in e
+      (expand (("a" +# "b") *# ("e" +# "f")) in e) should equal (("c" +# "d") *# ("a"*#"e" +# "a"*#"f" +# "b"*#"e" +# "b"*#"f"))
+      val e1 = 2*#"a" +# "a"*#"b" +# ("a" +# "b")*#("a" +# 7)
+      (expand (("a" +# "b") *# ("a" +# 7)) in e1) should equal ("a"#:2 +# 9*#"a" +# 7*#"b" +# 2*#"a"*#"b")
+    }
+    "expand the full expression in the `expanded` API form" in {
+      val prod = ("a" +# "b") *# ("c" +# "d")
+      prod.expanded should equal ("a"*#"c" +# "a"*#"d" +# "b"*#"c" +# "b"*#"d")
+      val e = ("a" +# "b") *# (1/#"a" +# 1/#"b")
+      e.expanded should equal ("a"/#"b" +# "b"/#"a" +# 2)
     }
   }
