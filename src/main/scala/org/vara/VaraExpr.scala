@@ -72,7 +72,7 @@ object VaraExpr:
   infix inline def e(inline i: Int): VaraExpr = i
 
   infix inline def e(inline d: Double): VaraExpr = d
-  
+
   private def pruneAST(e: VaraExpr): VaraExpr = e match
     case Add(sum *) =>
       if sum.length == 1 then pruneAST(sum.head)
@@ -144,7 +144,7 @@ object VaraExpr:
   infix def distribute(e1: VaraExpr): Distribute = Distribute(e1)
 
   /** `expand` API */
-  case class Expand(e: VaraExpr):
+  case class Expand(arg: VaraExpr):
     private def expand2(sum1: Add, sum2: Add): Add =
       val e = sum1 *# sum2
       val d = distribute (sum1) over sum2 in e
@@ -159,7 +159,7 @@ object VaraExpr:
       if sums.length == 2 then d
       else expandN(d +: sums.tail.tail *)
 
-    infix def in(expr: VaraExpr): VaraExpr = e match
+    infix def in(expr: VaraExpr): VaraExpr = arg match
       case Mul(prod *) =>
         val sums: Seq[Add] = prod.filter(_.isInstanceOf[Add]).map(_.asInstanceOf[Add])
         if sums.length <= 1 then expr
@@ -169,17 +169,27 @@ object VaraExpr:
           if factors.nonEmpty then
             substitute (
               distribute (Mul(factors *)) over expansion in Mul(expansion +: factors *)
-            ) forExpr e in expr
-          else expansion
+            ) forExpr arg in expr
+          else substitute (expansion) forExpr arg in expr
       case Pow(base, Const(v)) =>
         if !v.isWhole then expr
         else
           val prod = Mul(List.fill(abs(v.toInt))(base) *)
           val expansion = expand (prod) in prod
-          if v < 0 then substitute (1 /# expansion) forExpr e in expr
-          else substitute (expansion) forExpr e in expr
+          if v < 0 then substitute (1 /# expansion) forExpr arg in expr
+          else substitute (expansion) forExpr arg in expr
       case _ => expr
 
-  infix def expand(e: VaraExpr): Expand = Expand(e)
+  infix def expand(arg: VaraExpr): Expand = Expand(arg)
 
-  //TODO: `factor` API
+  /** `expandAll` API */
+  case class ExpandAll(arg: VaraExpr):
+    infix def in(expr: VaraExpr): VaraExpr =
+      @tailrec
+      def multipleExpand(e: VaraExpr): VaraExpr =
+        val expanded = expand (arg) in e
+        if expanded == e then e
+        else multipleExpand(expanded)
+      multipleExpand(expr)
+        
+  infix def expandAll(arg: VaraExpr): ExpandAll = ExpandAll(arg)
