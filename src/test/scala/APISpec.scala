@@ -65,7 +65,7 @@ class APISpec extends AnyWordSpec with Matchers:
   }
 
   "expand" should {
-    "fully expand all occurrences of a product of sums" in {
+    "fully expand the first occurrence of a product of sums" in {
       val e = ("a" +# "b") *# ("c" +# "d") *# ("e" +# "f")
       (expand (("a" +# "b") *# ("e" +# "f")) in e) should equal (("c" +# "d") *# ("a"*#"e" +# "a"*#"f" +# "b"*#"e" +# "b"*#"f"))
       val e1 = 2*#"a" +# "a"*#"b" +# ("a" +# "b")*#("a" +# 7)
@@ -76,5 +76,9 @@ class APISpec extends AnyWordSpec with Matchers:
       prod.expanded should equal ("a"*#"c" +# "a"*#"d" +# "b"*#"c" +# "b"*#"d")
       val e = ("a" +# "b") *# (1/#"a" +# 1/#"b")
       e.expanded should equal ("a"/#"b" +# "b"/#"a" +# 2)
+      val ex = "a"*#"c" +# "a"*#"d" +# "b"*#"c" +# "b"*#"d"
+      val e2 = prod +# "k"#:prod
+      (expand (prod) in e2) should equal (ex +# "k"#:prod)
+      (expand (prod) in (expand (prod) in e2)) should equal (ex +# "k"#:ex)
     }
   }
