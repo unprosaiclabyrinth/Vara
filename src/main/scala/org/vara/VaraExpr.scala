@@ -193,3 +193,12 @@ object VaraExpr:
       multipleExpand(expr)
         
   infix def expandAll(arg: VaraExpr): ExpandAll = ExpandAll(arg)
+  
+  /** `factor` API */
+  case class FactorFrom(arg: VaraExpr, sum: VaraExpr):
+    infix def in(expr: VaraExpr): VaraExpr = ???
+    
+  case class Factor(arg: VaraExpr):
+    infix def from(sum: VaraExpr): FactorFrom = FactorFrom(arg, sum)
+    
+  infix def factor(arg: VaraExpr): Factor = Factor(arg)
