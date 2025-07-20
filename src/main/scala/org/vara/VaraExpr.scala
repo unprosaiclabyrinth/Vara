@@ -193,12 +193,16 @@ object VaraExpr:
       multipleExpand(expr)
         
   infix def expandAll(arg: VaraExpr): ExpandAll = ExpandAll(arg)
-  
+
   /** `factor` API */
-  case class FactorFrom(arg: VaraExpr, sum: VaraExpr):
-    infix def in(expr: VaraExpr): VaraExpr = ???
-    
+  case class FactorFrom(arg: VaraExpr, fromarg: VaraExpr):
+    infix def in(expr: VaraExpr): VaraExpr =
+      val factorization = fromarg match
+        case Add(sum *) => arg *# sum.foldLeft(e(0))((acc, t) => acc +# (t /# arg))
+        case _ => fromarg
+      substitute (factorization) forExpr fromarg in expr
+
   case class Factor(arg: VaraExpr):
     infix def from(sum: VaraExpr): FactorFrom = FactorFrom(arg, sum)
-    
+
   infix def factor(arg: VaraExpr): Factor = Factor(arg)
