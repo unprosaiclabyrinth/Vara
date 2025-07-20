@@ -82,5 +82,11 @@ class APISpec extends AnyWordSpec with Matchers:
       (expand (prod) in (expand (prod) in e2)) should equal (ex +# "k"#:ex)
     }
   }
-  
+
+  "factor" should {
+    "pull out a factor from a sum" in {
+      (factor ("a"*#"b") from "a" +# "b" in "a" +# "b" +# "c") should equal ("a"*#"b" *# (1/#"a" +# 1/#"b") +# "c")
+    }
+  }
+
   //TODO: Add negative tests
