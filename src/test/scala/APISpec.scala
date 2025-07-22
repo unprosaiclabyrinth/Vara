@@ -81,12 +81,21 @@ class APISpec extends AnyWordSpec with Matchers:
       (expand (prod) in e2) should equal (ex +# "k"#:prod)
       (expand (prod) in (expand (prod) in e2)) should equal (ex +# "k"#:ex)
     }
+    "fully extend an integer power of a multinomial" in {
+      (("a" +# "b")#:2).expanded should equal ("a"#:2 +# 2*#"a"*#"b" +# "b"#:2)
+      (("a" +# "b")*#("a" -# "b")).expanded should equal ("a"#:2 -# "b"#:2)
+      (("x" +# "a")*#("x" +# "b")).expanded should equal ("x"#:2 +# "a"*#"x" +# "b"*#"x" +# "a"*#"b")
+      (("a" +# "b")*#("a"#:2 -# "a"*#"b" +# "b"#:2)).expanded should equal ("a"#:3 +# "b"#:3)
+      ("a"*#"b"*#"c"*#(1/#"a" +# 1/#"b" +# 1/#"c")).expanded should equal ("a"*#"b" +# "b"*#"c" +# "c"*#"a")
+      (("a" +# "b" +# "c")#:2).expanded should equal ("a"#:2 +# "b"#:2 +# "c"#:2 +# (2*#"a"*#"b"*#"c"*#(1/#"a" +# 1/#"b" +# 1/#"c")).expanded)
+    }
   }
 
   "factor" should {
     "pull out a factor from a sum" in {
       (factor ("a"*#"b") from "a" +# "b" in "a" +# "b" +# "c") should equal ("a"*#"b" *# (1/#"a" +# 1/#"b") +# "c")
     }
+    //TODO: Add more tests
   }
 
   //TODO: Add negative tests
