@@ -154,15 +154,17 @@ object VaraExpr:
 
     @tailrec
     private def expandN(sums: Add*): VaraExpr =
-      require(sums.length >= 2)
-      val d = expand2(sums.head, sums.tail.head)
-      if sums.length == 2 then d
-      else expandN(d +: sums.tail.tail *)
+      require(sums.nonEmpty)
+      if sums.length == 1 then sums.head
+      else
+        val d = expand2(sums.head, sums.tail.head)
+        if sums.length == 2 then d
+        else expandN(d +: sums.tail.tail *)
 
     infix def in(expr: VaraExpr): VaraExpr = arg match
       case Mul(prod *) =>
         val sums: Seq[Add] = prod.filter(_.isInstanceOf[Add]).map(_.asInstanceOf[Add])
-        if sums.length <= 1 then expr
+        if sums.isEmpty then expr
         else
           val expansion = expandN(sums *)
           val factors = prod.filterNot(_.isInstanceOf[Mul | Add])
