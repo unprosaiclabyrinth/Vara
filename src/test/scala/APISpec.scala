@@ -85,6 +85,10 @@ class APISpec extends AnyWordSpec with Matchers:
       prod.expanded should equal ("a"*#"c" +# "a"*#"d" +# "b"*#"c" +# "b"*#"d")
       val e = ("a" +# "b") *# (1/#"a" +# 1/#"b")
       e.expanded should equal ("a"/#"b" +# "b"/#"a" +# 2)
+      val sq = (("a" +# "b")#:2).expanded
+      (("a" +# "b")*#("a" +# "b")#:(-2)).expanded should equal (1 /# ("a" +# "b"))
+      (("c" +# "d")*#("a" +# "b")#:(-2)).expanded should not equal (("c" +# "d") /# sq)
+      (("c" +# "d")*#("a" +# "b")#:(-2)).expanded should equal ("c" /# sq +# "d" /# sq)
     }
     "fully extend an integer power of a multinomial" in {
       (("a" +# "b")#:2).expanded should equal ("a"#:2 +# 2*#"a"*#"b" +# "b"#:2)
@@ -101,6 +105,8 @@ class APISpec extends AnyWordSpec with Matchers:
   "factor" should {
     "pull out a factor from a sum" in {
       (factor ("a"*#"b") from "a" +# "b" in "a" +# "b" +# "c") should equal ("a"*#"b" *# (1/#"a" +# 1/#"b") +# "c")
+      val d = (("a" +# "b")#:2).expanded
+      (factor (1 /# d) from "c"/#d +# "d"/#d in "c"/#d +# "d"/#d +# "e"/#d) should equal (("c" +# "d") /# d +# "e"/#d)
     }
     //TODO: Add more tests
   }
