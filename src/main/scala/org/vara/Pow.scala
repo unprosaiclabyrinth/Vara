@@ -23,8 +23,8 @@ object Pow:
     case (_, Const(0D)) | (Const(1D), _) => Const(1D)
     case (b, Const(1D)) => b
     case (Const(b), Const(i)) => Const(math.pow(b, i))
-    case (Pow(u, v), _) => new Pow(u, v*#index)
+    case (Pow(u, v), _) => Pow(u, v*#index)
     case (Mul(prod *), Const(v)) => prod.foldLeft(Const(1).asInstanceOf[VaraExpr]){
-      (acc, term) => acc *# new Pow(term, index)
+      (acc, term) => acc *# Pow(term, index)
     }
     case _ => new Pow(base, index)
