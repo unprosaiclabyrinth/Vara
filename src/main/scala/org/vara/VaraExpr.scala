@@ -73,16 +73,6 @@ object VaraExpr:
 
   infix inline def e(inline d: Double): VaraExpr = d
 
-  private def pruneAST(e: VaraExpr): VaraExpr = e match
-    case Add(sum *) =>
-      if sum.length == 1 then pruneAST(sum.head)
-      else Add(sum.map(pruneAST) *)
-    case Mul(prod *) =>
-      if prod.length == 1 then pruneAST(prod.head)
-      else Mul(prod.map(pruneAST) *)
-    case Pow(a, b) => pruneAST(a) #: pruneAST(b)
-    case _ => e
-
   /** `put` API */
   case class Put(bindings: (String, VaraExpr)*):
     infix def in(expr: VaraExpr): VaraExpr =
