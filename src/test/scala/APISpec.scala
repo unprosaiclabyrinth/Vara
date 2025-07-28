@@ -80,6 +80,11 @@ class APISpec extends AnyWordSpec with Matchers:
       val e2 = prod +# "k"#:prod
       (expand (prod) in e2) should equal (ex +# "k"#:prod)
       (expand (prod) in (expand (prod) in e2)) should equal (ex +# "k"#:ex)
+      val e3 = "c" *# ("a" +# "b")#:2
+      val e4 = e3 +# "d"
+      val ans = "c"*#"a"#:2 +# "c"*#"b"#:2 +# 2*#"a"*#"b"*#"c"
+      e3.expanded should not equal ans
+      (expand (e3) in e4) should not equal (substitute (ans) forExpr e3 in e4)
     }
     "fully extend an integer power of a multinomial" in {
       (("a" +# "b")#:2).expanded should equal ("a"#:2 +# 2*#"a"*#"b" +# "b"#:2)
@@ -88,6 +93,8 @@ class APISpec extends AnyWordSpec with Matchers:
       (("a" +# "b")*#("a"#:2 -# "a"*#"b" +# "b"#:2)).expanded should equal ("a"#:3 +# "b"#:3)
       ("a"*#"b"*#"c"*#(1/#"a" +# 1/#"b" +# 1/#"c")).expanded should equal ("a"*#"b" +# "b"*#"c" +# "c"*#"a")
       (("a" +# "b" +# "c")#:2).expanded should equal ("a"#:2 +# "b"#:2 +# "c"#:2 +# (2*#"a"*#"b"*#"c"*#(1/#"a" +# 1/#"b" +# 1/#"c")).expanded)
+      (("a" +# "b")#:(-2)).expanded should not equal (1 /# ("a" +# "b")#:2)
+      (("a" +# "b")#:(-2)).expanded should equal (1 /# (("a" +# "b")#:2).expanded)
     }
   }
 
