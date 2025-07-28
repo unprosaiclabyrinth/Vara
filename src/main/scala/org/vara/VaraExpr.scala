@@ -90,19 +90,19 @@ object VaraExpr:
         case Add(sum *) =>
           if old.isInstanceOf[Add] && old.asInstanceOf[Add].terms.forall(sum contains) then
             sum.filterNot(old.asInstanceOf[Add].terms contains).foldLeft(substitution)(
-              (acc, term) => acc +# term
+              (acc, term) => acc +# in(term)
             )
           else if sum contains old then sum.filterNot(_ == old).foldLeft(substitution) {
-            (acc, term) => acc +# term
+            (acc, term) => acc +# in(term)
           }
           else sum.foldLeft(e(0))((acc, term) => acc +# in(term))
         case Mul(prod*) =>
           if old.isInstanceOf[Mul] && old.asInstanceOf[Mul].terms.forall(prod contains) then
             prod.filterNot(old.asInstanceOf[Mul].terms contains).foldLeft(substitution)(
-              (acc, term) => acc *# term
+              (acc, term) => acc *# in(term)
             )
           else if prod contains old then prod.filterNot(_ == old).foldLeft(substitution) {
-            (acc, term) => acc *# term
+            (acc, term) => acc *# in(term)
           }
           else prod.foldLeft(e(1))((acc, term) => acc *# in(term))
         case Pow(a, b) => in(a) #: in(b)
@@ -153,11 +153,12 @@ object VaraExpr:
 
     infix def in(expr: VaraExpr): VaraExpr = arg match
       case Mul(prod *) =>
-        val sums: Seq[Add] = prod.filter(_.isInstanceOf[Add]).map(_.asInstanceOf[Add])
+        val prod2 = prod.map(_.expanded)
+        val sums: Seq[Add] = prod2.filter(_.isInstanceOf[Add]).map(_.asInstanceOf[Add])
         if sums.isEmpty then expr
         else
           val expansion = expandN(sums *)
-          val factors = prod.filterNot(_.isInstanceOf[Mul | Add])
+          val factors = prod2.filterNot(_.isInstanceOf[Mul | Add])
           if factors.nonEmpty then
             substitute (
               distribute (Mul(factors *)) over expansion in Mul(expansion +: factors *)
@@ -166,25 +167,13 @@ object VaraExpr:
       case Pow(base, Const(v)) =>
         if !v.isWhole then expr
         else
-          val prod = Mul(List.fill(abs(v.toInt))(base) *)
+          val prod = Mul(List.fill(abs(v.toInt))(base.expanded) *)
           val expansion = expand (prod) in prod
           if v < 0 then substitute (1 /# expansion) forExpr arg in expr
           else substitute (expansion) forExpr arg in expr
       case _ => expr
 
   infix def expand(arg: VaraExpr): Expand = Expand(arg)
-
-  /** `expandAll` API */
-  case class ExpandAll(arg: VaraExpr):
-    infix def in(expr: VaraExpr): VaraExpr =
-      @tailrec
-      def multipleExpand(e: VaraExpr): VaraExpr =
-        val expanded = expand (arg) in e
-        if expanded == e then e
-        else multipleExpand(expanded)
-      multipleExpand(expr)
-        
-  infix def expandAll(arg: VaraExpr): ExpandAll = ExpandAll(arg)
 
   /** `factor` API */
   case class FactorFrom(arg: VaraExpr, fromarg: VaraExpr):
