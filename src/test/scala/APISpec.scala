@@ -65,26 +65,26 @@ class APISpec extends AnyWordSpec with Matchers:
   }
 
   "expand" should {
-    "fully expand the first occurrence of a product of sums" in {
+    "fully expand all occurrences of a product of sums" in {
       val e = ("a" +# "b") *# ("c" +# "d") *# ("e" +# "f")
       (expand (("a" +# "b") *# ("e" +# "f")) in e) should equal (("c" +# "d") *# ("a"*#"e" +# "a"*#"f" +# "b"*#"e" +# "b"*#"f"))
       val e1 = 2*#"a" +# "a"*#"b" +# ("a" +# "b")*#("a" +# 7)
       (expand (("a" +# "b") *# ("a" +# 7)) in e1) should equal ("a"#:2 +# 9*#"a" +# 7*#"b" +# 2*#"a"*#"b")
+      val prod = ("a" +# "b") *# ("c" +# "d")
+      val ex = "a" *# "c" +# "a" *# "d" +# "b" *# "c" +# "b" *# "d"
+      val e2 = prod +# "k" #: prod
+      (expand(prod) in e2) should equal(ex +# "k" #: ex)
+      val e3 = "c" *# ("a" +# "b") #: 2
+      val e4 = e3 +# "d"
+      val ans = "c" *# "a" #: 2 +# "c" *# "b" #: 2 +# 2 *# "a" *# "b" *# "c"
+      e3.expanded should equal(ans)
+      (expand(e3) in e4) should equal(substitute(ans) forExpr e3 in e4)
     }
     "expand the full expression in the `expanded` API form" in {
       val prod = ("a" +# "b") *# ("c" +# "d")
       prod.expanded should equal ("a"*#"c" +# "a"*#"d" +# "b"*#"c" +# "b"*#"d")
       val e = ("a" +# "b") *# (1/#"a" +# 1/#"b")
       e.expanded should equal ("a"/#"b" +# "b"/#"a" +# 2)
-      val ex = "a"*#"c" +# "a"*#"d" +# "b"*#"c" +# "b"*#"d"
-      val e2 = prod +# "k"#:prod
-      (expand (prod) in e2) should equal (ex +# "k"#:prod)
-      (expand (prod) in (expand (prod) in e2)) should equal (ex +# "k"#:ex)
-      val e3 = "c" *# ("a" +# "b")#:2
-      val e4 = e3 +# "d"
-      val ans = "c"*#"a"#:2 +# "c"*#"b"#:2 +# 2*#"a"*#"b"*#"c"
-      e3.expanded should not equal ans
-      (expand (e3) in e4) should not equal (substitute (ans) forExpr e3 in e4)
     }
     "fully extend an integer power of a multinomial" in {
       (("a" +# "b")#:2).expanded should equal ("a"#:2 +# 2*#"a"*#"b" +# "b"#:2)
@@ -105,4 +105,4 @@ class APISpec extends AnyWordSpec with Matchers:
     //TODO: Add more tests
   }
 
-  //TODO: Add negative tests
+  //TODO: Add negative tests (i.e. different cases for idempotence)
